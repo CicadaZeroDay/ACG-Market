@@ -67,10 +67,10 @@ INSERT INTO banners (slot, title, subtitle, cta_text, link_url, link_target, pri
 ('hero', 'Black Friday — до 50% OFF', 'Легендарная распродажа стартовала. Не пропусти!', 'За скидками', '#packages', '_self', 3, false),
 
 -- Mid Banner
-('mid', 'Приведи друга — заработай 10%', 'Получай бонус с каждой покупки приглашённого друга', 'Участвовать', 'https://t.me/ACGMarketBot', '_blank', 1, true),
+('mid', 'Приведи друга — заработай 10%', 'Получай бонус с каждой покупки приглашённого друга', 'Участвовать', 'https://t.me/kyshkovinsta_bot', '_blank', 1, true),
 
 -- Grid Banner (in channel cards)
-('grid', 'Хочешь в каталог?', 'Добавь свой канал и получай заказы от 100K+ клиентов', 'Стать партнёром', 'https://t.me/ACGMarketBot', '_blank', 1, true);
+('grid', 'Хочешь в каталог?', 'Добавь свой канал и получай заказы от 100K+ клиентов', 'Стать партнёром', 'https://t.me/kyshkovinsta_bot', '_blank', 1, true);
 
 -- =============================================
 -- Useful Queries for Management

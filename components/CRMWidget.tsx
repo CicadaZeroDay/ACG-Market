@@ -9,7 +9,7 @@ interface CRMWidgetProps {
   botUsername?: string;
 }
 
-export const CRMWidget: React.FC<CRMWidgetProps> = ({ t, botUsername = 'ACGMarketBot' }) => {
+export const CRMWidget: React.FC<CRMWidgetProps> = ({ t, botUsername = 'kyshkovinsta_bot' }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const telegramUrl = `https://t.me/${botUsername}`;

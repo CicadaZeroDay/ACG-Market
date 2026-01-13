@@ -258,7 +258,7 @@ function App() {
                  <span className="text-xs font-bold text-acg-yellow">$999</span>
                </button>
                <a
-                 href="https://t.me/ACGMarketBot?start=ai_custom"
+                 href="https://t.me/kyshkovinsta_bot?start=ai_custom"
                  target="_blank"
                  rel="noopener noreferrer"
                  className="w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-sm font-medium text-zinc-400 hover:text-white hover:bg-white/5 transition-all group"
@@ -513,7 +513,7 @@ function App() {
 
                 <div className="space-y-2">
                   <a
-                    href="https://t.me/ACGMarketBot?start=ai_custom"
+                    href="https://t.me/kyshkovinsta_bot?start=ai_custom"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-full py-3 bg-zinc-800 text-white font-semibold rounded-xl hover:bg-acg-yellow hover:text-black transition-all duration-300 flex items-center justify-center gap-2"
@@ -521,7 +521,7 @@ function App() {
                     <Sparkles size={16} /> Подобрать с ИИ
                   </a>
                   <a
-                    href="https://t.me/ACGMarketBot?start=manager"
+                    href="https://t.me/kyshkovinsta_bot?start=manager"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-full py-2.5 border border-zinc-700 text-zinc-400 font-medium rounded-xl hover:border-acg-yellow hover:text-acg-yellow transition-all duration-300 flex items-center justify-center gap-2 text-sm"
@@ -593,7 +593,7 @@ function App() {
       />
 
       {/* CRM Widget - Floating Telegram Button */}
-      <CRMWidget t={t} botUsername="ACGMarketBot" />
+      <CRMWidget t={t} botUsername="kyshkovinsta_bot" />
     </div>
   );
 }
