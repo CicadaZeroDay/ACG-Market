@@ -180,11 +180,15 @@ export async function createStripeCheckout(cart: CartItem[]): Promise<StripeChec
 
     const data = await response.json();
 
+    // DEBUG: Логируем ответ от сервера
+    console.log('Stripe webhook response:', data);
+
     // ═══════════════════════════════════════════════════════════════
     // 6. ВАЛИДАЦИЯ ОТВЕТА
     // ═══════════════════════════════════════════════════════════════
 
     if (!data.url) {
+      console.error('Missing URL in response. Full response:', JSON.stringify(data));
       throw new CheckoutServerError('URL оплаты не получен');
     }
 
@@ -201,6 +205,9 @@ export async function createStripeCheckout(cart: CartItem[]): Promise<StripeChec
 
   } catch (error) {
     clearTimeout(timeoutId);
+
+    // DEBUG: Логируем полную ошибку
+    console.error('Full checkout error:', error);
 
     if (error instanceof CheckoutValidationError || error instanceof CheckoutServerError) {
       throw error;
