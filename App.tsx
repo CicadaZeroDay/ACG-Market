@@ -233,20 +233,39 @@ function App() {
           <div>
              <h3 className="text-[10px] uppercase text-zinc-500 font-extrabold tracking-wider mb-3 px-4">{t.sidebar.packages}</h3>
              <div className="space-y-1">
-               <button 
-                 onClick={() => scrollToPackage('pkg1')} 
-                 className="w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium text-zinc-400 hover:text-white hover:bg-white/5 transition-all group"
+               <button
+                 onClick={() => scrollToPackage('gold')}
+                 className="w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-sm font-medium text-zinc-400 hover:text-white hover:bg-white/5 transition-all group"
                >
-                 <div className="flex items-center gap-3"><PackageIcon size={18} className="group-hover:text-acg-yellow transition-colors" /> {t.packages.smart}</div>
-                 <span className="px-2 py-0.5 rounded-md bg-green-500/10 text-green-400 text-[10px] font-bold border border-green-500/20">-50%</span>
+                 <div className="flex items-center gap-3"><Rocket size={16} className="group-hover:text-acg-yellow transition-colors" /> GOLD</div>
+                 <span className="text-xs font-bold text-zinc-500">$99</span>
                </button>
-               <button 
-                 onClick={() => scrollToPackage('pkg2')} 
-                 className="w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium text-zinc-400 hover:text-white hover:bg-white/5 transition-all group"
+               <button
+                 onClick={() => scrollToPackage('platinum')}
+                 className="w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-sm font-medium text-zinc-400 hover:text-white hover:bg-white/5 transition-all group"
                >
-                 <div className="flex items-center gap-3"><TrendingUp size={18} className="group-hover:text-acg-yellow transition-colors" /> {t.packages.pro}</div>
-                 <span className="px-2 py-0.5 rounded-md bg-green-500/10 text-green-400 text-[10px] font-bold border border-green-500/20">-60%</span>
+                 <div className="flex items-center gap-3"><TrendingUp size={16} className="group-hover:text-acg-yellow transition-colors" /> PLATINUM</div>
+                 <div className="flex items-center gap-2">
+                   <span className="px-1.5 py-0.5 rounded bg-acg-yellow/20 text-acg-yellow text-[9px] font-bold">ХИТ</span>
+                   <span className="text-xs font-bold text-zinc-500">$299</span>
+                 </div>
                </button>
+               <button
+                 onClick={() => scrollToPackage('exclusive')}
+                 className="w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-sm font-medium text-zinc-400 hover:text-white hover:bg-white/5 transition-all group"
+               >
+                 <div className="flex items-center gap-3"><Crown size={16} className="group-hover:text-acg-yellow transition-colors" /> EXCLUSIVE</div>
+                 <span className="text-xs font-bold text-acg-yellow">$999</span>
+               </button>
+               <a
+                 href="https://t.me/ACGMarketBot?start=ai_custom"
+                 target="_blank"
+                 rel="noopener noreferrer"
+                 className="w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-sm font-medium text-zinc-400 hover:text-white hover:bg-white/5 transition-all group"
+               >
+                 <div className="flex items-center gap-3"><Sparkles size={16} className="group-hover:text-acg-yellow transition-colors" /> CUSTOM</div>
+                 <span className="text-xs text-zinc-600">→</span>
+               </a>
              </div>
           </div>
         </nav>
@@ -351,7 +370,7 @@ function App() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
               {/* GOLD Card */}
-              <div className="card-gold rounded-2xl p-6 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+              <div id="package-gold" className="card-gold rounded-2xl p-6 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
                 <div className="flex items-center gap-2 mb-4">
                   <Rocket className="text-acg-yellow/60" size={20} />
                   <span className="text-xs font-bold uppercase tracking-wider text-acg-yellow/50">Для старта</span>
@@ -384,7 +403,7 @@ function App() {
               </div>
 
               {/* PLATINUM Card */}
-              <div className="card-platinum rounded-2xl p-6 animate-fade-in-up relative" style={{ animationDelay: '0.2s' }}>
+              <div id="package-platinum" className="card-platinum rounded-2xl p-6 animate-fade-in-up relative" style={{ animationDelay: '0.2s' }}>
                 <div className="absolute top-4 right-4 bg-acg-yellow/20 text-acg-yellow text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider">
                   Хит
                 </div>
@@ -423,7 +442,7 @@ function App() {
               </div>
 
               {/* EXCLUSIVE Card */}
-              <div className="card-exclusive rounded-2xl p-6 animate-fade-in-up relative" style={{ animationDelay: '0.3s' }}>
+              <div id="package-exclusive" className="card-exclusive rounded-2xl p-6 animate-fade-in-up relative" style={{ animationDelay: '0.3s' }}>
                 <div className="absolute top-4 right-4 bg-acg-yellow text-black text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider flex items-center gap-1">
                   <Crown size={10} /> VIP
                 </div>
@@ -465,7 +484,7 @@ function App() {
               </div>
 
               {/* CUSTOM Card - AI/Manager */}
-              <div className="card-custom rounded-2xl p-6 animate-fade-in-up relative" style={{ animationDelay: '0.4s' }}>
+              <div id="package-custom" className="card-custom rounded-2xl p-6 animate-fade-in-up relative" style={{ animationDelay: '0.4s' }}>
                 <div className="flex items-center gap-2 mb-4">
                   <Sparkles className="text-acg-yellow/70" size={20} />
                   <span className="text-xs font-bold uppercase tracking-wider text-acg-yellow/50">Персональный</span>
