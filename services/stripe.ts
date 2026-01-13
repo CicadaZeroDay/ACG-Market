@@ -70,10 +70,8 @@ function sanitizeCartItem(item: CartItem): StripeCheckoutItem | null {
     return null;
   }
 
-  // Валидируем UUID (если это не пакет с простым ID)
-  // Пакеты могут иметь простые ID типа 'pkg1', 'pkg2'
-  const isPackage = item.type === 'package';
-  if (!isPackage && !isValidUUID(item.referenceId)) {
+  // Валидируем UUID для всех товаров (включая пакеты)
+  if (!isValidUUID(item.referenceId)) {
     console.warn('Invalid UUID format:', item.referenceId);
     return null;
   }

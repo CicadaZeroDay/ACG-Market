@@ -395,7 +395,7 @@ function App() {
                 </div>
 
                 <button
-                  onClick={() => addPackageToCart({ id: 'gold', name: 'GOLD', slug: 'gold', category: 'ad', description: 'Идеально для первых шагов', price: 99, posts_count: 5, includes_pin: true, pin_count: 1, bonus_posts: 0, discount_percent: 0, is_popular: false })}
+                  onClick={() => addPackageToCart({ id: '64f43509-ee65-463b-ab9a-84e382f4d421', name: 'GOLD', slug: 'gold', category: 'ad', description: 'Идеально для первых шагов', price: 99, posts_count: 5, includes_pin: true, pin_count: 1, bonus_posts: 0, discount_percent: 0, is_popular: false })}
                   className="w-full py-3 bg-zinc-800 text-white font-semibold rounded-xl hover:bg-acg-yellow hover:text-black transition-all duration-300"
                 >
                   Начать
@@ -434,7 +434,7 @@ function App() {
                 </div>
 
                 <button
-                  onClick={() => addPackageToCart({ id: 'platinum', name: 'PLATINUM', slug: 'platinum', category: 'ad', description: 'Для стабильного дохода', price: 299, posts_count: 15, includes_pin: true, pin_count: 5, bonus_posts: 0, discount_percent: 0, is_popular: true })}
+                  onClick={() => addPackageToCart({ id: 'f5ac9447-e9b0-48cc-8abf-968b4ae30ecc', name: 'PLATINUM', slug: 'platinum', category: 'ad', description: 'Для стабильного дохода', price: 299, posts_count: 15, includes_pin: true, pin_count: 5, bonus_posts: 0, discount_percent: 0, is_popular: true })}
                   className="w-full py-3 bg-acg-yellow/90 text-black font-semibold rounded-xl hover:bg-acg-yellow transition-all duration-300"
                 >
                   Выбрать
@@ -476,7 +476,7 @@ function App() {
                 </div>
 
                 <button
-                  onClick={() => addPackageToCart({ id: 'exclusive', name: 'EXCLUSIVE', slug: 'exclusive', category: 'ad', description: 'Полное доминирование', price: 999, posts_count: 50, includes_pin: true, pin_count: 99, bonus_posts: 0, discount_percent: 0, is_popular: false })}
+                  onClick={() => addPackageToCart({ id: '695c95c4-7a67-478d-bc9b-e69504e087c9', name: 'EXCLUSIVE', slug: 'exclusive', category: 'ad', description: 'Полное доминирование', price: 999, posts_count: 50, includes_pin: true, pin_count: 99, bonus_posts: 0, discount_percent: 0, is_popular: false })}
                   className="w-full py-3 bg-acg-yellow text-black font-bold rounded-xl hover:bg-white transition-all duration-300 hover:shadow-[0_0_30px_rgba(255,210,0,0.3)]"
                 >
                   Получить доступ
