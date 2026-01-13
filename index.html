@@ -1,10 +1,76 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="24" fill="%230a0a0a" stroke="%23FFD200" stroke-width="4"/><text x="50" y="72" font-family="sans-serif" font-weight="900" font-size="65" text-anchor="middle" fill="%23FFD200">A</text></svg>' />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ACG Marketplace</title>
+
+    <!-- Primary Meta Tags -->
+    <title>ACG Market — Маркетплейс рекламы в Telegram каналах</title>
+    <meta name="title" content="ACG Market — Маркетплейс рекламы в Telegram каналах" />
+    <meta name="description" content="Размещайте рекламу в топовых Telegram каналах. 50+ проверенных площадок, прозрачные цены, гарантия результата. Пакеты от $99." />
+    <meta name="keywords" content="telegram реклама, купить рекламу telegram, маркетплейс telegram, реклама в каналах, ACG Market, telegram ads, telegram marketing" />
+    <meta name="author" content="ACG Market" />
+    <meta name="robots" content="index, follow" />
+    <meta name="language" content="Russian" />
+    <meta name="revisit-after" content="7 days" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://acgm.app/" />
+    <meta property="og:title" content="ACG Market — Маркетплейс рекламы в Telegram" />
+    <meta property="og:description" content="Размещайте рекламу в топовых Telegram каналах. 50+ площадок, от $99." />
+    <meta property="og:image" content="https://acgm.app/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content="ACG Market" />
+    <meta property="og:locale" content="ru_RU" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://acgm.app/" />
+    <meta name="twitter:title" content="ACG Market — Маркетплейс рекламы в Telegram" />
+    <meta name="twitter:description" content="Размещайте рекламу в топовых Telegram каналах. 50+ площадок, от $99." />
+    <meta name="twitter:image" content="https://acgm.app/og-image.png" />
+
+    <!-- Canonical -->
+    <link rel="canonical" href="https://acgm.app/" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#FFD200" />
+    <meta name="msapplication-TileColor" content="#0a0a0a" />
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "ACG Market",
+      "description": "Маркетплейс рекламы в Telegram каналах. Размещайте рекламу в 50+ проверенных площадках.",
+      "url": "https://acgm.app",
+      "logo": "https://acgm.app/logo.png",
+      "sameAs": [
+        "https://t.me/ACGMarketBot"
+      ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "customer service",
+        "url": "https://t.me/ACGMarketBot",
+        "availableLanguage": ["Russian", "Ukrainian", "English"]
+      },
+      "offers": {
+        "@type": "AggregateOffer",
+        "priceCurrency": "USD",
+        "lowPrice": "50",
+        "highPrice": "999",
+        "offerCount": "50+"
+      }
+    }
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -33,6 +99,11 @@
               'float': 'float 6s ease-in-out infinite',
               'shine': 'shine 3s linear infinite',
               'text-shimmer': 'text-shimmer 3s linear infinite',
+              'fade-in-up': 'fade-in-up 0.6s ease-out forwards',
+              'scale-in': 'scale-in 0.4s ease-out forwards',
+              'gradient-shift': 'gradient-shift 4s ease infinite',
+              'glow-pulse': 'glow-pulse 2s ease-in-out infinite',
+              'shimmer': 'shimmer 2s linear infinite',
             },
             keyframes: {
               'pulse-glow': {
@@ -41,7 +112,7 @@
               },
               'float': {
                 '0%, 100%': { transform: 'translateY(0)' },
-                '50%': { transform: 'translateY(-3px)' },
+                '50%': { transform: 'translateY(-8px)' },
               },
               'shine': {
                 '0%': { left: '-100%' },
@@ -51,6 +122,26 @@
               'text-shimmer': {
                 '0%': { backgroundPosition: '0% 50%' },
                 '100%': { backgroundPosition: '200% 50%' },
+              },
+              'fade-in-up': {
+                '0%': { opacity: 0, transform: 'translateY(30px)' },
+                '100%': { opacity: 1, transform: 'translateY(0)' },
+              },
+              'scale-in': {
+                '0%': { opacity: 0, transform: 'scale(0.9)' },
+                '100%': { opacity: 1, transform: 'scale(1)' },
+              },
+              'gradient-shift': {
+                '0%, 100%': { backgroundPosition: '0% 50%' },
+                '50%': { backgroundPosition: '100% 50%' },
+              },
+              'glow-pulse': {
+                '0%, 100%': { boxShadow: '0 0 20px rgba(255, 210, 0, 0.3)' },
+                '50%': { boxShadow: '0 0 40px rgba(255, 210, 0, 0.6)' },
+              },
+              'shimmer': {
+                '0%': { backgroundPosition: '-200% 0' },
+                '100%': { backgroundPosition: '200% 0' },
               }
             }
           },
@@ -76,6 +167,113 @@
       ::-webkit-scrollbar-thumb:hover {
         background: #FFD200;
       }
+
+      /* Premium Package Cards - Unified Gold Palette */
+      .card-gold {
+        background: #111;
+        border: 1px solid rgba(255, 210, 0, 0.15);
+        position: relative;
+        overflow: hidden;
+      }
+      .card-gold::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 210, 0, 0.05), transparent);
+        animation: shimmer 4s infinite;
+      }
+      .card-gold:hover {
+        border-color: rgba(255, 210, 0, 0.4);
+        box-shadow: 0 0 30px rgba(255, 210, 0, 0.1);
+        transform: translateY(-4px);
+      }
+
+      .card-platinum {
+        background: #111;
+        border: 1px solid rgba(255, 210, 0, 0.25);
+        position: relative;
+        overflow: hidden;
+      }
+      .card-platinum::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 210, 0, 0.08), transparent);
+        animation: shimmer 3.5s infinite 0.3s;
+      }
+      .card-platinum:hover {
+        border-color: rgba(255, 210, 0, 0.5);
+        box-shadow: 0 0 35px rgba(255, 210, 0, 0.15);
+        transform: translateY(-4px);
+      }
+
+      .card-exclusive {
+        background: #111;
+        border: 2px solid #FFD200;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 0 20px rgba(255, 210, 0, 0.15);
+      }
+      .card-exclusive::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 210, 0, 0.12), transparent);
+        animation: shimmer 3s infinite;
+      }
+      .card-exclusive:hover {
+        box-shadow: 0 0 50px rgba(255, 210, 0, 0.25);
+        transform: translateY(-6px);
+      }
+
+      .card-custom {
+        background: #111;
+        border: 1px solid rgba(255, 210, 0, 0.2);
+        position: relative;
+        overflow: hidden;
+      }
+      .card-custom::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 210, 0, 0.06), transparent);
+        animation: shimmer 4s infinite 0.5s;
+      }
+      .card-custom:hover {
+        border-color: rgba(255, 210, 0, 0.4);
+        box-shadow: 0 0 30px rgba(255, 210, 0, 0.1);
+        transform: translateY(-4px);
+      }
+
+      /* Text styles - Gold palette only */
+      .text-gold {
+        color: #FFD200;
+      }
+      .text-gold-muted {
+        color: rgba(255, 210, 0, 0.7);
+      }
+
+      /* Smooth transitions */
+      .card-gold, .card-platinum, .card-exclusive, .card-custom {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      @keyframes shimmer {
+        0% { left: -100%; }
+        100% { left: 100%; }
+      }
     </style>
   <script type="importmap">
 {
@@ -91,5 +289,6 @@
 </head>
   <body>
     <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
   </body>
 </html>

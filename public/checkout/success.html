@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline';">
+  <title>Оплата успешна | ACG Market</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <meta name="theme-color" content="#FFD200">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      padding: 20px;
+    }
+    .container {
+      max-width: 480px;
+      text-align: center;
+      animation: fadeIn 0.5s ease-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .icon {
+      width: 100px;
+      height: 100px;
+      background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      box-shadow: 0 0 40px rgba(34, 197, 94, 0.3);
+    }
+    .icon svg {
+      width: 50px;
+      height: 50px;
+      color: white;
+    }
+    h1 {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 12px;
+      background: linear-gradient(90deg, #FFD200, #FFAA00);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .subtitle {
+      color: #a1a1aa;
+      font-size: 16px;
+      line-height: 1.6;
+      margin-bottom: 32px;
+    }
+    .order-info {
+      background: rgba(255, 210, 0, 0.05);
+      border: 1px solid rgba(255, 210, 0, 0.2);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 32px;
+    }
+    .order-info p {
+      color: #71717a;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+    .order-info strong {
+      color: #FFD200;
+      font-size: 14px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 32px;
+      background: linear-gradient(135deg, #FFD200 0%, #FFAA00 100%);
+      color: #000;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 16px;
+      border-radius: 12px;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 20px rgba(255, 210, 0, 0.3);
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 30px rgba(255, 210, 0, 0.5);
+    }
+    .footer {
+      margin-top: 40px;
+      color: #52525b;
+      font-size: 13px;
+    }
+    .footer a {
+      color: #FFD200;
+      text-decoration: none;
+    }
+    .logo {
+      margin-bottom: 24px;
+    }
+    .logo span:first-child {
+      color: #FFD200;
+      font-weight: 900;
+      font-size: 24px;
+    }
+    .logo span:last-child {
+      color: #fff;
+      font-weight: 900;
+      font-size: 24px;
+      margin-left: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">
+      <span>ACG</span><span>Market</span>
+    </div>
+
+    <div class="icon">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+      </svg>
+    </div>
+
+    <h1>Оплата прошла успешно!</h1>
+    <p class="subtitle">
+      Спасибо за заказ! Мы уже начали обработку вашей заявки.
+      Менеджер свяжется с вами в ближайшее время для уточнения деталей.
+    </p>
+
+    <div class="order-info">
+      <p>Информация о заказе отправлена на вашу почту</p>
+      <p><strong>Обычно мы отвечаем в течение 1-2 часов</strong></p>
+    </div>
+
+    <a href="/" class="btn">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+      </svg>
+      Вернуться в магазин
+    </a>
+
+    <div class="footer">
+      <p>Есть вопросы? <a href="https://t.me/ACGMarketBot" target="_blank">Напишите нам в Telegram</a></p>
+    </div>
+  </div>
+
+  <script>
+    // Очистить корзину после успешной оплаты
+    try {
+      localStorage.removeItem('acg_cart');
+      sessionStorage.removeItem('acg_cart');
+    } catch (e) {
+      // Игнорируем ошибки localStorage
+    }
+  </script>
+</body>
+</html>

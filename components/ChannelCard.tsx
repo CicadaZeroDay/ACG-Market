@@ -14,8 +14,8 @@ interface ChannelCardProps {
 }
 
 export const ChannelCard: React.FC<ChannelCardProps> = ({ channel, products, onAddToCart, onBuyNow, t }) => {
-  // Filter out non-display formats if necessary
-  const availableFormats = products.filter(p => !['subscription', 'branding'].includes(p.product_type));
+  // Show main product types: ad, vacancy, resume, offer
+  const availableFormats = products.filter(p => ['ad', 'vacancy', 'resume', 'offer'].includes(p.product_type));
   
   const [selectedProductId, setSelectedProductId] = useState<string>('');
   const [selectedExtras, setSelectedExtras] = useState<string[]>([]);
@@ -64,17 +64,27 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({ channel, products, onA
     return num.toString();
   };
 
-  const getAvatarColor = (id: string) => {
-    const colors = ['bg-emerald-500', 'bg-blue-500', 'bg-violet-500', 'bg-rose-500', 'bg-orange-500', 'bg-cyan-500'];
-    return colors[id.charCodeAt(0) % colors.length];
+  const getAvatarStyle = () => {
+    if (channel.logo_color) {
+      return { backgroundColor: channel.logo_color };
+    }
+    const colors = ['#10b981', '#3b82f6', '#8b5cf6', '#f43f5e', '#f97316', '#06b6d4'];
+    return { backgroundColor: colors[channel.id.charCodeAt(0) % colors.length] };
   };
 
   return (
     <div className="bg-[#111] border border-white/5 rounded-2xl overflow-hidden hover:border-acg-yellow/30 hover:shadow-[0_0_30px_rgba(255,210,0,0.05)] transition-all duration-300 flex flex-col group h-full">
       {/* Header */}
       <div className="p-5 bg-gradient-to-b from-[#161616] to-[#111] border-b border-white/5 flex gap-4">
-        <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-2xl font-black text-white shadow-[inset_0_2px_10px_rgba(0,0,0,0.2)] ${getAvatarColor(channel.id)}/20 text-${getAvatarColor(channel.id).replace('bg-', '')}`}>
-          {channel.name.charAt(0)}
+        <div
+          className="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl font-black text-white shadow-[inset_0_2px_10px_rgba(0,0,0,0.2)] overflow-hidden"
+          style={getAvatarStyle()}
+        >
+          {channel.logo ? (
+            <img src={channel.logo} alt={channel.name} className="w-full h-full object-cover" />
+          ) : (
+            channel.name.charAt(0)
+          )}
         </div>
         <div className="flex-1 min-w-0 flex flex-col justify-center">
           <h3 className="font-bold text-lg text-white truncate leading-tight group-hover:text-acg-yellow transition-colors">{channel.name}</h3>

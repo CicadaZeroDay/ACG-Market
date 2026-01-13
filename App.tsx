@@ -1,30 +1,42 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { marketplaceService } from './services/supabase';
-import { Channel, Product, Package, FilterType, CartItem } from './types';
+import { Channel, Product, Package, FilterType, CartItem, Banner, Review } from './types';
 import { ChannelCard } from './components/ChannelCard';
 import { CartDrawer } from './components/CartDrawer';
+import { GuaranteesSection } from './components/GuaranteesSection';
+import { CRMWidget } from './components/CRMWidget';
+import { HeroBanner } from './components/HeroBanner';
+import { MidBanner } from './components/MidBanner';
+import { GridBanner } from './components/GridBanner';
+import { ReviewsCarousel } from './components/ReviewsCarousel';
 import { translations, Language } from './translations';
-import { 
-  Search, 
-  LayoutGrid, 
-  MessageCircle, 
-  Mic2, 
-  Package as PackageIcon, 
-  ShoppingCart, 
-  TrendingUp, 
-  BarChart3, 
-  Users, 
+import {
+  Search,
+  LayoutGrid,
+  MessageCircle,
+  Mic2,
+  Package as PackageIcon,
+  ShoppingCart,
+  TrendingUp,
+  BarChart3,
+  Users,
   DollarSign,
   Loader2,
   Check,
   Zap,
-  Globe
+  Globe,
+  Sparkles,
+  Crown,
+  Rocket,
+  MessageSquare
 } from 'lucide-react';
 
 function App() {
   const [channels, setChannels] = useState<Channel[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [packages, setPackages] = useState<Package[]>([]);
+  const [banners, setBanners] = useState<Banner[]>([]);
+  const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   
@@ -47,14 +59,18 @@ function App() {
       try {
         setLoading(true);
         // We load mock data if API fails, so we expect this to always succeed eventually
-        const [c, p, pkg] = await Promise.all([
+        const [c, p, pkg, b, r] = await Promise.all([
           marketplaceService.getChannels(),
           marketplaceService.getProducts(),
-          marketplaceService.getPackages()
+          marketplaceService.getPackages(),
+          marketplaceService.getBanners(),
+          marketplaceService.getReviews()
         ]);
         setChannels(c);
         setProducts(p);
         setPackages(pkg);
+        setBanners(b);
+        setReviews(r);
         setError(null);
       } catch (err: any) {
         // Should catch unlikely errors, but service mostly handles fallbacks
@@ -65,6 +81,11 @@ function App() {
     };
     loadData();
   }, []);
+
+  // Banner filtering by slot
+  const heroBanners = useMemo(() => banners.filter(b => b.slot === 'hero'), [banners]);
+  const midBanner = useMemo(() => banners.find(b => b.slot === 'mid'), [banners]);
+  const gridBanner = useMemo(() => banners.find(b => b.slot === 'grid'), [banners]);
 
   // Filter Logic
   const filteredChannels = useMemo(() => {
@@ -298,6 +319,9 @@ function App() {
              </div>
           </div>
 
+          {/* Hero Banner Carousel */}
+          {heroBanners.length > 0 && <HeroBanner banners={heroBanners} />}
+
           {/* Stats Bar */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
              {[
@@ -314,73 +338,171 @@ function App() {
              ))}
           </div>
 
-          {/* Packages Section */}
-          {packages.length > 0 && (
-            <div id="packages" className="mb-12">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="p-2 bg-acg-yellow/10 rounded-lg">
-                  <PackageIcon className="text-acg-yellow" size={20} />
+          {/* Premium Packages Section */}
+          <div id="packages" className="mb-16">
+            <div className="text-center mb-10">
+              <h2 className="text-3xl md:text-4xl font-black mb-3">
+                Выберите свой <span className="text-acg-yellow">уровень</span>
+              </h2>
+              <p className="text-zinc-500 text-lg max-w-2xl mx-auto">
+                От первых шагов до полного доминирования на рынке
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+              {/* GOLD Card */}
+              <div className="card-gold rounded-2xl p-6 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+                <div className="flex items-center gap-2 mb-4">
+                  <Rocket className="text-acg-yellow/60" size={20} />
+                  <span className="text-xs font-bold uppercase tracking-wider text-acg-yellow/50">Для старта</span>
                 </div>
-                <h2 className="text-xl font-bold tracking-tight">{t.packages.title}</h2>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                {packages.map((pkg) => (
-                  <div 
-                    id={`package-${pkg.id}`}
-                    key={pkg.id} 
-                    className={`relative bg-[#111] border rounded-2xl p-6 transition-all duration-500 
-                      ${highlightedPackageId === pkg.id 
-                        ? 'border-acg-yellow ring-2 ring-acg-yellow/50 shadow-[0_0_50px_rgba(255,210,0,0.25)] scale-[1.03] z-10' 
-                        : pkg.is_popular 
-                          ? 'border-acg-yellow/40 bg-gradient-to-br from-[#111] to-acg-yellow/5 hover:-translate-y-1 hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)]' 
-                          : 'border-white/5 hover:border-white/10 hover:-translate-y-1 hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)]'
-                      }`}
-                  >
-                    {pkg.is_popular && (
-                      <div className="absolute top-4 right-[-10px] bg-acg-yellow text-black text-[10px] font-bold px-3 py-1 uppercase tracking-wider transform rotate-3 shadow-lg flex items-center gap-1 z-10">
-                        <Zap size={10} fill="black" /> {t.packages.popular}
-                      </div>
-                    )}
-                    <h3 className="text-2xl font-black mb-2 text-white">{pkg.name}</h3>
-                    <p className="text-zinc-400 text-sm mb-6 h-10 leading-relaxed">{pkg.description}</p>
-                    
-                    <div className="space-y-4 mb-8 bg-black/20 p-4 rounded-xl">
-                       <div className="flex items-center gap-3 text-sm text-zinc-300 font-medium">
-                         <div className="w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center text-green-500 shadow-[0_0_10px_rgba(34,197,94,0.2)]"><Check size={12} strokeWidth={3} /></div>
-                         {pkg.posts_count} {t.packages.posts}
-                       </div>
-                       {pkg.includes_help && (
-                         <div className="flex items-center gap-3 text-sm text-zinc-300 font-medium">
-                            <div className="w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center text-green-500 shadow-[0_0_10px_rgba(34,197,94,0.2)]"><Check size={12} strokeWidth={3} /></div>
-                            {t.packages.help}
-                         </div>
-                       )}
-                       {pkg.includes_stats && (
-                         <div className="flex items-center gap-3 text-sm text-zinc-300 font-medium">
-                            <div className="w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center text-green-500 shadow-[0_0_10px_rgba(34,197,94,0.2)]"><Check size={12} strokeWidth={3} /></div>
-                            {t.packages.stats}
-                         </div>
-                       )}
-                    </div>
+                <h3 className="text-2xl font-black text-white mb-2">GOLD</h3>
+                <p className="text-zinc-500 text-sm mb-6 min-h-[40px]">Идеально для первых шагов</p>
 
-                    <div className="flex items-end gap-3 mb-6">
-                      <span className="text-4xl font-black text-acg-yellow tracking-tight">${pkg.price}</span>
-                      {pkg.discount_percent > 0 && (
-                        <span className="bg-green-500/10 text-green-400 px-2 py-1 rounded-lg text-xs font-bold mb-2 border border-green-500/20">-{pkg.discount_percent}% {t.packages.discount}</span>
-                      )}
-                    </div>
-
-                    <button 
-                      onClick={() => addPackageToCart(pkg)}
-                      className={`w-full py-3.5 font-bold rounded-xl transition-all duration-300 flex items-center justify-center gap-2 ${pkg.is_popular ? 'bg-acg-yellow text-black hover:bg-[#FFE066] shadow-[0_0_20px_rgba(255,210,0,0.15)]' : 'bg-zinc-800 text-white hover:bg-white hover:text-black border border-white/5'}`}
-                    >
-                      {t.packages.select}
-                    </button>
+                <div className="space-y-3 mb-6">
+                  <div className="flex items-center gap-2 text-sm text-zinc-400">
+                    <Check size={14} className="text-acg-yellow/70" /> 5 публикаций
                   </div>
-                ))}
+                  <div className="flex items-center gap-2 text-sm text-zinc-400">
+                    <Check size={14} className="text-acg-yellow/70" /> 1 закреп
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-zinc-400">
+                    <Check size={14} className="text-acg-yellow/70" /> Базовая аналитика
+                  </div>
+                </div>
+
+                <div className="mb-6">
+                  <span className="text-3xl font-black text-white">$99</span>
+                </div>
+
+                <button className="w-full py-3 bg-zinc-800 text-white font-semibold rounded-xl hover:bg-acg-yellow hover:text-black transition-all duration-300">
+                  Начать
+                </button>
+              </div>
+
+              {/* PLATINUM Card */}
+              <div className="card-platinum rounded-2xl p-6 animate-fade-in-up relative" style={{ animationDelay: '0.2s' }}>
+                <div className="absolute top-4 right-4 bg-acg-yellow/20 text-acg-yellow text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider">
+                  Хит
+                </div>
+                <div className="flex items-center gap-2 mb-4">
+                  <TrendingUp className="text-acg-yellow/70" size={20} />
+                  <span className="text-xs font-bold uppercase tracking-wider text-acg-yellow/50">Для роста</span>
+                </div>
+                <h3 className="text-2xl font-black text-white mb-2">PLATINUM</h3>
+                <p className="text-zinc-500 text-sm mb-6 min-h-[40px]">Для стабильного дохода</p>
+
+                <div className="space-y-3 mb-6">
+                  <div className="flex items-center gap-2 text-sm text-zinc-400">
+                    <Check size={14} className="text-acg-yellow" /> 15 публикаций
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-zinc-400">
+                    <Check size={14} className="text-acg-yellow" /> 5 закрепов
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-zinc-400">
+                    <Check size={14} className="text-acg-yellow" /> Приоритетная поддержка
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-zinc-400">
+                    <Check size={14} className="text-acg-yellow" /> Расширенная аналитика
+                  </div>
+                </div>
+
+                <div className="mb-6">
+                  <span className="text-3xl font-black text-white">$299</span>
+                </div>
+
+                <button className="w-full py-3 bg-acg-yellow/90 text-black font-semibold rounded-xl hover:bg-acg-yellow transition-all duration-300">
+                  Выбрать
+                </button>
+              </div>
+
+              {/* EXCLUSIVE Card */}
+              <div className="card-exclusive rounded-2xl p-6 animate-fade-in-up relative" style={{ animationDelay: '0.3s' }}>
+                <div className="absolute top-4 right-4 bg-acg-yellow text-black text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider flex items-center gap-1">
+                  <Crown size={10} /> VIP
+                </div>
+                <div className="flex items-center gap-2 mb-4">
+                  <Crown className="text-acg-yellow" size={20} />
+                  <span className="text-xs font-bold uppercase tracking-wider text-acg-yellow/70">Максимум</span>
+                </div>
+                <h3 className="text-2xl font-black text-acg-yellow mb-2">EXCLUSIVE</h3>
+                <p className="text-zinc-500 text-sm mb-6 min-h-[40px]">Полное доминирование</p>
+
+                <div className="space-y-3 mb-6">
+                  <div className="flex items-center gap-2 text-sm text-zinc-300">
+                    <Check size={14} className="text-acg-yellow" /> 50 публикаций
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-zinc-300">
+                    <Check size={14} className="text-acg-yellow" /> Безлимит закрепов
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-zinc-300">
+                    <Check size={14} className="text-acg-yellow" /> Личный менеджер 24/7
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-zinc-300">
+                    <Check size={14} className="text-acg-yellow" /> Эксклюзивные площадки
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-zinc-300">
+                    <Check size={14} className="text-acg-yellow" /> Гарантия результата
+                  </div>
+                </div>
+
+                <div className="mb-6">
+                  <span className="text-3xl font-black text-acg-yellow">$999</span>
+                </div>
+
+                <button className="w-full py-3 bg-acg-yellow text-black font-bold rounded-xl hover:bg-white transition-all duration-300 hover:shadow-[0_0_30px_rgba(255,210,0,0.3)]">
+                  Получить доступ
+                </button>
+              </div>
+
+              {/* CUSTOM Card - AI/Manager */}
+              <div className="card-custom rounded-2xl p-6 animate-fade-in-up relative" style={{ animationDelay: '0.4s' }}>
+                <div className="flex items-center gap-2 mb-4">
+                  <Sparkles className="text-acg-yellow/70" size={20} />
+                  <span className="text-xs font-bold uppercase tracking-wider text-acg-yellow/50">Персональный</span>
+                </div>
+                <h3 className="text-2xl font-black text-white mb-2">CUSTOM</h3>
+                <p className="text-zinc-500 text-sm mb-6 min-h-[40px]">ИИ соберёт идеальный пакет</p>
+
+                <div className="space-y-3 mb-6">
+                  <div className="flex items-center gap-2 text-sm text-zinc-400">
+                    <Sparkles size={14} className="text-acg-yellow/70" /> Анализ ваших целей
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-zinc-400">
+                    <Sparkles size={14} className="text-acg-yellow/70" /> Персональная подборка
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-zinc-400">
+                    <Sparkles size={14} className="text-acg-yellow/70" /> Оптимальный бюджет
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-zinc-400">
+                    <MessageSquare size={14} className="text-acg-yellow/70" /> Консультация
+                  </div>
+                </div>
+
+                <div className="mb-6">
+                  <span className="text-xl font-bold text-zinc-400">Индивидуально</span>
+                </div>
+
+                <div className="space-y-2">
+                  <button className="w-full py-3 bg-zinc-800 text-white font-semibold rounded-xl hover:bg-acg-yellow hover:text-black transition-all duration-300 flex items-center justify-center gap-2">
+                    <Sparkles size={16} /> Подобрать с ИИ
+                  </button>
+                  <button className="w-full py-2.5 border border-zinc-700 text-zinc-400 font-medium rounded-xl hover:border-acg-yellow hover:text-acg-yellow transition-all duration-300 flex items-center justify-center gap-2 text-sm">
+                    <MessageSquare size={14} /> Написать менеджеру
+                  </button>
+                </div>
               </div>
             </div>
-          )}
+          </div>
+
+          {/* Mid Banner */}
+          {midBanner && <MidBanner banner={midBanner} />}
+
+          {/* Guarantees Section */}
+          <GuaranteesSection t={t} />
+
+          {/* Reviews Carousel */}
+          {reviews.length > 0 && <ReviewsCarousel reviews={reviews} t={t} />}
 
           {/* Channels Grid */}
           <div className="mb-8">
@@ -398,30 +520,42 @@ function App() {
                </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
-                {filteredChannels.map(channel => (
-                  <ChannelCard 
-                    key={channel.id} 
-                    channel={channel} 
-                    products={products.filter(p => p.channel_id === channel.id)}
-                    onAddToCart={addToCart}
-                    onBuyNow={buyNow}
-                    t={t}
-                  />
+                {filteredChannels.map((channel, index) => (
+                  <React.Fragment key={channel.id}>
+                    {/* Insert GridBanner at position 4 (5th item) */}
+                    {index === 4 && gridBanner && (
+                      <GridBanner banner={gridBanner} t={t} />
+                    )}
+                    <ChannelCard
+                      channel={channel}
+                      products={products.filter(p => p.channel_id === channel.id)}
+                      onAddToCart={addToCart}
+                      onBuyNow={buyNow}
+                      t={t}
+                    />
+                  </React.Fragment>
                 ))}
+                {/* If less than 5 channels, show GridBanner at the end */}
+                {filteredChannels.length < 5 && filteredChannels.length > 0 && gridBanner && (
+                  <GridBanner banner={gridBanner} t={t} />
+                )}
               </div>
             )}
           </div>
         </div>
       </main>
 
-      <CartDrawer 
-        isOpen={isCartOpen} 
-        onClose={() => setIsCartOpen(false)} 
+      <CartDrawer
+        isOpen={isCartOpen}
+        onClose={() => setIsCartOpen(false)}
         items={cart}
         onRemove={removeFromCart}
         total={cartTotal}
         t={t}
       />
+
+      {/* CRM Widget - Floating Telegram Button */}
+      <CRMWidget t={t} botUsername="ACGMarketBot" />
     </div>
   );
 }

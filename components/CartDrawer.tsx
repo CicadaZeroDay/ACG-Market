@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { X, Trash2, CreditCard, Bitcoin, ShoppingCart } from 'lucide-react';
+import { X, Trash2, CreditCard, Bitcoin, ShoppingCart, Loader2, AlertCircle } from 'lucide-react';
 import { CartItem } from '../types';
 import { translations } from '../translations';
+import { redirectToStripeCheckout, CheckoutValidationError, CheckoutServerError } from '../services/stripe';
 
 type TranslationType = typeof translations.ru;
 
@@ -16,11 +17,31 @@ interface CartDrawerProps {
 
 export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose, items, onRemove, total, t }) => {
   const [paymentMethod, setPaymentMethod] = useState<'stripe' | 'crypto'>('stripe');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleCheckout = () => {
+  const handleCheckout = async () => {
     if (paymentMethod === 'stripe') {
-      alert(`💳 Stripe Checkout initialized for $${total}\n(Integration placeholder)`);
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        // Безопасный редирект на Stripe Checkout
+        // Цены НЕ отправляются - только product_id
+        await redirectToStripeCheckout(items);
+      } catch (err) {
+        // Показываем сообщение об ошибке (без технических деталей)
+        if (err instanceof CheckoutValidationError) {
+          setError(err.message);
+        } else if (err instanceof CheckoutServerError) {
+          setError(err.message);
+        } else {
+          setError('Произошла ошибка. Попробуйте позже.');
+        }
+        setIsLoading(false);
+      }
     } else {
+      // Криптоплатёж - показываем адрес
       alert(`₿ Crypto Payment\nSend ${total} USDT (TRC20) to:\nTHoQdnRed3faebgF8iZE68zwJYkCYh6EB9`);
     }
   };
@@ -121,11 +142,29 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose, items, 
                 </button>
               </div>
 
-              <button 
+              {/* Error Message */}
+              {error && (
+                <div className="flex items-center gap-2 p-3 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400 text-sm">
+                  <AlertCircle size={18} className="flex-shrink-0" />
+                  <span>{error}</span>
+                </div>
+              )}
+
+              <button
                 onClick={handleCheckout}
-                className="w-full py-4 bg-acg-yellow hover:bg-[#ffaa00] text-black font-bold text-lg rounded-xl transition-all hover:scale-[1.02] shadow-[0_0_20px_rgba(255,210,0,0.3)] active:scale-95"
+                disabled={isLoading}
+                className={`w-full py-4 bg-acg-yellow hover:bg-[#ffaa00] text-black font-bold text-lg rounded-xl transition-all shadow-[0_0_20px_rgba(255,210,0,0.3)] flex items-center justify-center gap-2 ${
+                  isLoading ? 'opacity-70 cursor-not-allowed' : 'hover:scale-[1.02] active:scale-95'
+                }`}
               >
-                {paymentMethod === 'stripe' ? `💳 ${t.cart.checkoutCard}` : `₿ ${t.cart.checkoutCrypto}`}
+                {isLoading ? (
+                  <>
+                    <Loader2 size={20} className="animate-spin" />
+                    Перенаправление...
+                  </>
+                ) : (
+                  paymentMethod === 'stripe' ? `💳 ${t.cart.checkoutCard}` : `₿ ${t.cart.checkoutCrypto}`
+                )}
               </button>
             </div>
           )}
