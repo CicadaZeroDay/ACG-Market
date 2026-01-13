@@ -7,28 +7,31 @@ type TranslationType = typeof translations.ru;
 interface CRMWidgetProps {
   t: TranslationType;
   botUsername?: string;
+  hidden?: boolean;
 }
 
-export const CRMWidget: React.FC<CRMWidgetProps> = ({ t, botUsername = 'kyshkovinsta_bot' }) => {
+export const CRMWidget: React.FC<CRMWidgetProps> = ({ t, botUsername = 'kyshkovinsta_bot', hidden = false }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const telegramUrl = `https://t.me/${botUsername}`;
 
   return (
     <>
-      {/* Floating Button */}
-      <button
-        onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-acg-yellow rounded-full flex items-center justify-center shadow-[0_4px_20px_rgba(255,210,0,0.4)] hover:shadow-[0_4px_30px_rgba(255,210,0,0.6)] hover:scale-110 transition-all duration-300 animate-glow-pulse group"
-        aria-label={t.crm?.buttonTitle || 'Contact us'}
-      >
-        <MessageCircle className="text-black" size={26} />
+      {/* Floating Button - hidden when cart is open */}
+      {!hidden && (
+        <button
+          onClick={() => setIsOpen(true)}
+          className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-acg-yellow rounded-full flex items-center justify-center shadow-[0_4px_20px_rgba(255,210,0,0.4)] hover:shadow-[0_4px_30px_rgba(255,210,0,0.6)] hover:scale-110 transition-all duration-300 animate-glow-pulse group"
+          aria-label={t.crm?.buttonTitle || 'Contact us'}
+        >
+          <MessageCircle className="text-black" size={26} />
 
-        {/* Tooltip */}
-        <span className="absolute right-full mr-3 px-3 py-1.5 bg-[#111] text-white text-sm font-medium rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 border border-white/10 shadow-xl">
-          {t.crm?.buttonTitle || 'Написать нам'}
-        </span>
-      </button>
+          {/* Tooltip */}
+          <span className="absolute right-full mr-3 px-3 py-1.5 bg-[#111] text-white text-sm font-medium rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 border border-white/10 shadow-xl">
+            {t.crm?.buttonTitle || 'Написать нам'}
+          </span>
+        </button>
+      )}
 
       {/* Modal Overlay */}
       {isOpen && (

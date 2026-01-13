@@ -593,7 +593,7 @@ function App() {
       />
 
       {/* CRM Widget - Floating Telegram Button */}
-      <CRMWidget t={t} botUsername="kyshkovinsta_bot" />
+      <CRMWidget t={t} botUsername="kyshkovinsta_bot" hidden={isCartOpen} />
     </div>
   );
 }
