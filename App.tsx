@@ -493,12 +493,22 @@ function App() {
                 </div>
 
                 <div className="space-y-2">
-                  <button className="w-full py-3 bg-zinc-800 text-white font-semibold rounded-xl hover:bg-acg-yellow hover:text-black transition-all duration-300 flex items-center justify-center gap-2">
+                  <a
+                    href="https://t.me/ACGMarketBot?start=ai_custom"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full py-3 bg-zinc-800 text-white font-semibold rounded-xl hover:bg-acg-yellow hover:text-black transition-all duration-300 flex items-center justify-center gap-2"
+                  >
                     <Sparkles size={16} /> Подобрать с ИИ
-                  </button>
-                  <button className="w-full py-2.5 border border-zinc-700 text-zinc-400 font-medium rounded-xl hover:border-acg-yellow hover:text-acg-yellow transition-all duration-300 flex items-center justify-center gap-2 text-sm">
+                  </a>
+                  <a
+                    href="https://t.me/ACGMarketBot?start=manager"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full py-2.5 border border-zinc-700 text-zinc-400 font-medium rounded-xl hover:border-acg-yellow hover:text-acg-yellow transition-all duration-300 flex items-center justify-center gap-2 text-sm"
+                  >
                     <MessageSquare size={14} /> Написать менеджеру
-                  </button>
+                  </a>
                 </div>
               </div>
             </div>
