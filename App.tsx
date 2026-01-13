@@ -375,7 +375,10 @@ function App() {
                   <span className="text-3xl font-black text-white">$99</span>
                 </div>
 
-                <button className="w-full py-3 bg-zinc-800 text-white font-semibold rounded-xl hover:bg-acg-yellow hover:text-black transition-all duration-300">
+                <button
+                  onClick={() => addPackageToCart({ id: 'gold', name: 'GOLD', slug: 'gold', category: 'ad', description: 'Идеально для первых шагов', price: 99, posts_count: 5, includes_pin: true, pin_count: 1, bonus_posts: 0, discount_percent: 0, is_popular: false })}
+                  className="w-full py-3 bg-zinc-800 text-white font-semibold rounded-xl hover:bg-acg-yellow hover:text-black transition-all duration-300"
+                >
                   Начать
                 </button>
               </div>
@@ -411,7 +414,10 @@ function App() {
                   <span className="text-3xl font-black text-white">$299</span>
                 </div>
 
-                <button className="w-full py-3 bg-acg-yellow/90 text-black font-semibold rounded-xl hover:bg-acg-yellow transition-all duration-300">
+                <button
+                  onClick={() => addPackageToCart({ id: 'platinum', name: 'PLATINUM', slug: 'platinum', category: 'ad', description: 'Для стабильного дохода', price: 299, posts_count: 15, includes_pin: true, pin_count: 5, bonus_posts: 0, discount_percent: 0, is_popular: true })}
+                  className="w-full py-3 bg-acg-yellow/90 text-black font-semibold rounded-xl hover:bg-acg-yellow transition-all duration-300"
+                >
                   Выбрать
                 </button>
               </div>
@@ -450,7 +456,10 @@ function App() {
                   <span className="text-3xl font-black text-acg-yellow">$999</span>
                 </div>
 
-                <button className="w-full py-3 bg-acg-yellow text-black font-bold rounded-xl hover:bg-white transition-all duration-300 hover:shadow-[0_0_30px_rgba(255,210,0,0.3)]">
+                <button
+                  onClick={() => addPackageToCart({ id: 'exclusive', name: 'EXCLUSIVE', slug: 'exclusive', category: 'ad', description: 'Полное доминирование', price: 999, posts_count: 50, includes_pin: true, pin_count: 99, bonus_posts: 0, discount_percent: 0, is_popular: false })}
+                  className="w-full py-3 bg-acg-yellow text-black font-bold rounded-xl hover:bg-white transition-all duration-300 hover:shadow-[0_0_30px_rgba(255,210,0,0.3)]"
+                >
                   Получить доступ
                 </button>
               </div>
