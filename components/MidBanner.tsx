@@ -1,5 +1,7 @@
+'use client';
+
 import React, { useState } from 'react';
-import { Banner } from '../types';
+import { Banner } from '@/lib/types';
 import { X, ArrowRight, Gift, Sparkles } from 'lucide-react';
 
 interface MidBannerProps {

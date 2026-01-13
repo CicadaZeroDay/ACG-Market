@@ -1,7 +1,9 @@
+'use client';
+
 import React from 'react';
-import { Banner } from '../types';
+import { Banner } from '@/lib/types';
 import { Megaphone, ArrowRight, Rocket, Star } from 'lucide-react';
-import { translations } from '../translations';
+import { translations } from '@/lib/translations';
 
 type TranslationType = typeof translations.ru;
 

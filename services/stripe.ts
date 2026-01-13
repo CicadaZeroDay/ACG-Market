@@ -9,7 +9,7 @@
  * - Не раскрывает детали ошибок пользователю
  */
 
-import { CartItem } from '../types';
+import { CartItem } from '@/lib/types';
 
 // Endpoint для создания Stripe сессии
 const STRIPE_WEBHOOK_URL = 'https://n8n.kyshkov.com/webhook/stripe-checkout';
@@ -95,7 +95,7 @@ function sanitizeCartItem(item: CartItem): StripeCheckoutItem | null {
  * Использует только текущий домен (защита от open redirect)
  */
 function getSecureRedirectUrls(): { success_url: string; cancel_url: string } {
-  const origin = window.location.origin;
+  const origin = typeof window !== 'undefined' ? window.location.origin : '';
 
   return {
     success_url: `${origin}/checkout/success`,
@@ -229,7 +229,9 @@ export async function redirectToStripeCheckout(cart: CartItem[]): Promise<void> 
   const { url } = await createStripeCheckout(cart);
 
   // Безопасный редирект (URL уже проверен)
-  window.location.href = url;
+  if (typeof window !== 'undefined') {
+    window.location.href = url;
+  }
 }
 
 /**

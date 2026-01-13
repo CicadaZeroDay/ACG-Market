@@ -1,7 +1,9 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
-import { Channel, Product } from '../types';
+import { Channel, Product } from '@/lib/types';
 import { Users, Check, MessageCircle, Mic2, Zap, ShoppingBag } from 'lucide-react';
-import { translations } from '../translations';
+import { translations } from '@/lib/translations';
 
 type TranslationType = typeof translations.ru;
 
@@ -58,7 +60,8 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({ channel, products, onA
   
   const totalPrice = basePrice + extrasPrice;
 
-  const formatNumber = (num: number) => {
+  const formatNumber = (num: number | null | undefined) => {
+    if (num == null) return '0';
     if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
     if (num >= 1000) return Math.round(num / 1000) + 'K';
     return num.toString();
@@ -169,16 +172,16 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({ channel, products, onA
           </div>
         </div>
         <div className="flex gap-3">
-          <button 
+          <button
             onClick={() => onAddToCart(channel, currentProduct, selectedExtras, totalPrice)}
-            className="px-4 py-3 border border-zinc-700 hover:border-white text-zinc-300 hover:text-white text-sm font-bold rounded-xl transition-all flex items-center justify-center"
+            className="px-4 py-3 border border-zinc-700 hover:border-white text-zinc-300 hover:text-white text-sm font-bold rounded-xl transition-all flex items-center justify-center haptic-tap min-w-[52px]"
             title={t.product.addToCart}
           >
             <ShoppingBag size={18} />
           </button>
-          <button 
+          <button
             onClick={() => onBuyNow(channel, currentProduct, selectedExtras, totalPrice)}
-            className="flex-1 px-4 py-3 bg-acg-yellow hover:bg-[#FFE066] text-black text-sm font-black rounded-xl transition-all hover:shadow-[0_0_20px_rgba(255,210,0,0.25)] active:scale-95 flex items-center justify-center gap-2 uppercase tracking-wide"
+            className="flex-1 px-4 py-3 bg-acg-yellow hover:bg-[#FFE066] text-black text-sm font-black rounded-xl transition-all hover:shadow-[0_0_20px_rgba(255,210,0,0.25)] active:scale-95 flex items-center justify-center gap-2 uppercase tracking-wide haptic-tap"
           >
             {t.product.buy}
           </button>

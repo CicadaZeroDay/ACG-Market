@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+'use client';
+
+import React, { useState, useEffect, useCallback } from 'react';
 import { X, Trash2, CreditCard, Bitcoin, ShoppingCart, Loader2, AlertCircle } from 'lucide-react';
-import { CartItem } from '../types';
-import { translations } from '../translations';
-import { redirectToStripeCheckout, CheckoutValidationError, CheckoutServerError } from '../services/stripe';
+import { CartItem } from '@/lib/types';
+import { translations } from '@/lib/translations';
+import { redirectToStripeCheckout, CheckoutValidationError, CheckoutServerError } from '@/services/stripe';
+import { useTelegram } from '@/contexts/TelegramContext';
 
 type TranslationType = typeof translations.ru;
 
@@ -20,17 +23,18 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose, items, 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleCheckout = async () => {
+  const { isMiniApp, showMainButton, hideMainButton, setMainButtonLoading, hapticFeedback } = useTelegram();
+
+  const handleCheckout = useCallback(async () => {
     if (paymentMethod === 'stripe') {
       setIsLoading(true);
       setError(null);
+      if (isMiniApp) setMainButtonLoading(true);
+      hapticFeedback('medium');
 
       try {
-        // Безопасный редирект на Stripe Checkout
-        // Цены НЕ отправляются - только product_id
         await redirectToStripeCheckout(items);
       } catch (err) {
-        // Показываем сообщение об ошибке (без технических деталей)
         if (err instanceof CheckoutValidationError) {
           setError(err.message);
         } else if (err instanceof CheckoutServerError) {
@@ -39,11 +43,30 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose, items, 
           setError('Произошла ошибка. Попробуйте позже.');
         }
         setIsLoading(false);
+        if (isMiniApp) setMainButtonLoading(false);
+        hapticFeedback('error');
       }
     } else {
-      // Криптоплатёж - показываем адрес
+      hapticFeedback('medium');
       alert(`₿ Crypto Payment\nSend ${total} USDT (TRC20) to:\nTHoQdnRed3faebgF8iZE68zwJYkCYh6EB9`);
     }
+  }, [paymentMethod, items, total, isMiniApp, setMainButtonLoading, hapticFeedback]);
+
+  // Show Telegram MainButton when cart is open with items
+  useEffect(() => {
+    if (isMiniApp && isOpen && items.length > 0) {
+      const buttonText = paymentMethod === 'stripe'
+        ? `💳 ${t.cart.checkoutCard} — $${total}`
+        : `₿ ${t.cart.checkoutCrypto} — $${total}`;
+      showMainButton(buttonText, handleCheckout);
+    } else if (isMiniApp) {
+      hideMainButton();
+    }
+  }, [isMiniApp, isOpen, items.length, paymentMethod, total, t.cart.checkoutCard, t.cart.checkoutCrypto, showMainButton, hideMainButton, handleCheckout]);
+
+  const handleRemove = (id: number) => {
+    hapticFeedback('light');
+    onRemove(id);
   };
 
   return (
@@ -55,7 +78,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose, items, 
       />
 
       {/* Drawer */}
-      <div className={`fixed top-0 right-0 h-full w-full sm:w-[420px] bg-acg-card border-l border-acg-border z-50 transform transition-transform duration-300 flex flex-col ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+      <div className={`fixed top-0 right-0 h-full w-full sm:w-[420px] bg-acg-card border-l border-acg-border z-50 transform transition-transform duration-300 flex flex-col ${isOpen ? 'translate-x-0' : 'translate-x-full'} ${isMiniApp ? 'pb-[env(safe-area-inset-bottom,0px)]' : ''}`}>
         
         {/* Header */}
         <div className="p-6 border-b border-acg-border flex justify-between items-center bg-zinc-900/50">
@@ -84,9 +107,9 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose, items, 
                   <h3 className="font-semibold text-white">
                     {item.type === 'package' ? '🎁 ' : ''}{item.channelName || item.name}
                   </h3>
-                  <button 
-                    onClick={() => onRemove(item.id)}
-                    className="text-zinc-500 hover:text-red-500 transition-colors"
+                  <button
+                    onClick={() => handleRemove(item.id)}
+                    className="text-zinc-500 hover:text-red-500 transition-colors haptic-tap"
                   >
                     <Trash2 size={18} />
                   </button>
@@ -150,22 +173,32 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose, items, 
                 </div>
               )}
 
-              <button
-                onClick={handleCheckout}
-                disabled={isLoading}
-                className={`w-full py-4 bg-acg-yellow hover:bg-[#ffaa00] text-black font-bold text-lg rounded-xl transition-all shadow-[0_0_20px_rgba(255,210,0,0.3)] flex items-center justify-center gap-2 ${
-                  isLoading ? 'opacity-70 cursor-not-allowed' : 'hover:scale-[1.02] active:scale-95'
-                }`}
-              >
-                {isLoading ? (
-                  <>
-                    <Loader2 size={20} className="animate-spin" />
-                    Перенаправление...
-                  </>
-                ) : (
-                  paymentMethod === 'stripe' ? `💳 ${t.cart.checkoutCard}` : `₿ ${t.cart.checkoutCrypto}`
-                )}
-              </button>
+              {/* Hide checkout button in Mini App mode (MainButton is used instead) */}
+              {!isMiniApp && (
+                <button
+                  onClick={handleCheckout}
+                  disabled={isLoading}
+                  className={`w-full py-4 bg-acg-yellow hover:bg-[#ffaa00] text-black font-bold text-lg rounded-xl transition-all shadow-[0_0_20px_rgba(255,210,0,0.3)] flex items-center justify-center gap-2 haptic-tap ${
+                    isLoading ? 'opacity-70 cursor-not-allowed' : 'hover:scale-[1.02] active:scale-95'
+                  }`}
+                >
+                  {isLoading ? (
+                    <>
+                      <Loader2 size={20} className="animate-spin" />
+                      Перенаправление...
+                    </>
+                  ) : (
+                    paymentMethod === 'stripe' ? `💳 ${t.cart.checkoutCard}` : `₿ ${t.cart.checkoutCrypto}`
+                  )}
+                </button>
+              )}
+
+              {/* Mini App checkout hint */}
+              {isMiniApp && items.length > 0 && (
+                <div className="text-center text-xs text-zinc-500 py-2">
+                  {isLoading ? 'Перенаправление...' : 'Нажмите кнопку внизу для оплаты'}
+                </div>
+              )}
             </div>
           )}
         </div>

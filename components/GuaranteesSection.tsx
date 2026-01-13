@@ -1,6 +1,8 @@
+'use client';
+
 import React from 'react';
 import { Shield, RefreshCcw, Clock, Headphones, Users, ThumbsUp, Award, Zap } from 'lucide-react';
-import { translations } from '../translations';
+import { translations } from '@/lib/translations';
 
 type TranslationType = typeof translations.ru;
 
