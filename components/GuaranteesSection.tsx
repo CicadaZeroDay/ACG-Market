@@ -34,7 +34,7 @@ export const GuaranteesSection: React.FC<GuaranteesSectionProps> = ({ t }) => {
 
   const stats = [
     { value: '100K+', label: t.guarantees?.clients || 'Клиентов' },
-    { value: '99%', label: t.guarantees?.satisfied || 'Довольных' },
+    { value: '~400K', label: t.guarantees?.publications || 'Публикаций' },
     { value: '24/7', label: t.guarantees?.supportTime || 'Поддержка' },
     { value: '10+', label: t.guarantees?.years || 'Лет опыта' }
   ];
