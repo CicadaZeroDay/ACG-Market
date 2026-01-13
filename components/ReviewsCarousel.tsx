@@ -1,7 +1,9 @@
+'use client';
+
 import React, { useState, useEffect, useCallback } from 'react';
-import { Review } from '../types';
+import { Review } from '@/lib/types';
 import { Star, ChevronLeft, ChevronRight, Quote, MessageCircle } from 'lucide-react';
-import { translations } from '../translations';
+import { translations } from '@/lib/translations';
 
 type TranslationType = typeof translations.ru;
 

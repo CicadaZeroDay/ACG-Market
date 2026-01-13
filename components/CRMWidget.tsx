@@ -1,6 +1,8 @@
+'use client';
+
 import React, { useState } from 'react';
 import { MessageCircle, X, Send, ExternalLink } from 'lucide-react';
-import { translations } from '../translations';
+import { translations } from '@/lib/translations';
 
 type TranslationType = typeof translations.ru;
 

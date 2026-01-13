@@ -1,5 +1,7 @@
+'use client';
+
 import React, { useState, useEffect, useCallback } from 'react';
-import { Banner } from '../types';
+import { Banner } from '@/lib/types';
 import { ChevronLeft, ChevronRight, ArrowRight, Zap, TrendingUp, Gift } from 'lucide-react';
 
 interface HeroBannerProps {
