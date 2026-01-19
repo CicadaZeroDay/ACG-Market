@@ -1,0 +1,65 @@
+вот ## Задача: Открывать Stripe Checkout в новом окне
+
+### Текущее поведение
+window.location.href = data.url — редирект в текущем окне
+
+### Требуемое поведение
+Stripe открывается в новом окне/вкладке
+
+### Реализация
+
+ВАЖНО: Браузеры блокируют popup если он не вызван напрямую действием пользователя. 
+Нужно открыть окно ДО fetch запроса, потом обновить URL.
+```javascript
+async function redirectToStripeCheckout(items) {
+  // 1. Открываем окно СРАЗУ при клике (до async операций)
+  const stripeWindow = window.open('about:blank', '_blank');
+  
+  if (!stripeWindow) {
+    throw new Error('Браузер заблокировал всплывающее окно. Разрешите popup для этого сайта.');
+  }
+  
+  // 2. Показываем loading в новом окне
+  stripeWindow.document.write(`
+    <html>
+      <head><title>Загрузка оплаты...</title></head>
+      <body style="display:flex;justify-content:center;align-items:center;height:100vh;font-family:sans-serif;">
+        <div style="text-align:center;">
+          <h2>Загрузка страницы оплаты...</h2>
+          <p>Пожалуйста, подождите</p>
+        </div>
+      </body>
+    </html>
+  `);
+  
+  try {
+    // 3. Делаем запрос на создание сессии
+    const response = await fetch('https://n8n.kyshkov.com/webhook/stripe-checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ items, success_url, cancel_url })
+    });
+    
+    const data = await response.json();
+    
+    // 4. Валидация URL
+    if (!data.url || !data.url.startsWith('https://checkout.stripe.com/')) {
+      stripeWindow.close();
+      throw new Error('Некорректный URL оплаты');
+    }
+    
+    // 5. Редирект нового окна на Stripe
+    stripeWindow.location.href = data.url;
+    
+  } catch (error) {
+    // Закрываем окно при ошибке
+    stripeWindow.close();
+    throw error;
+  }
+}
+```
+
+### Важно
+- Окно открывается ДО await fetch — иначе браузер заблокирует
+- При ошибке окно закрывается
+- Показывается loading пока идёт запрос

@@ -165,8 +165,7 @@ export default function CryptoCheckout({
               <div className="flex items-center gap-3">
                 <span className="text-3xl">{crypto.icon}</span>
                 <div className="text-left">
-                  <div className="font-semibold">{crypto.name}</div>
-                  <div className="text-sm text-gray-500">{crypto.network}</div>
+                  <div className="font-semibold text-gray-900">{crypto.name} <span className="font-normal text-gray-500">•</span> {crypto.network}</div>
                 </div>
               </div>
               <div className="text-right text-sm text-gray-500">
@@ -177,9 +176,9 @@ export default function CryptoCheckout({
           ))}
         </div>
 
-        <div className="mt-6 p-4 bg-gray-50 rounded-xl flex justify-between">
+        <div className="mt-6 p-4 bg-gray-50 rounded-xl flex justify-between items-center">
           <span className="text-gray-600">До оплати:</span>
-          <span className="font-bold text-xl">${amountUsd.toFixed(2)}</span>
+          <span className="font-bold text-xl text-gray-900">${amountUsd.toFixed(2)}</span>
         </div>
 
         {onCancel && (
@@ -227,7 +226,7 @@ export default function CryptoCheckout({
             onClick={() => copyToClipboard(selectedCrypto.address, 'address')}
             className="p-4 bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100"
           >
-            <div className="font-mono text-sm break-all mb-2">{selectedCrypto.address}</div>
+            <div className="font-mono text-sm break-all mb-2 text-gray-900 font-medium">{selectedCrypto.address}</div>
             <div className="text-sm text-gray-500 text-right">
               {copied === 'address' ? '✓ Скопійовано!' : 'Натисніть щоб копіювати'}
             </div>
@@ -275,11 +274,11 @@ export default function CryptoCheckout({
         <div className="mb-6 p-4 bg-gray-50 rounded-xl">
           <div className="flex justify-between mb-2">
             <span className="text-gray-600">Сума:</span>
-            <span className="font-semibold">${amountUsd.toFixed(2)} {selectedCrypto.name}</span>
+            <span className="font-semibold text-gray-900">${amountUsd.toFixed(2)} {selectedCrypto.name}</span>
           </div>
           <div className="flex justify-between">
             <span className="text-gray-600">Мережа:</span>
-            <span className="font-semibold">{selectedCrypto.network}</span>
+            <span className="font-semibold text-gray-900">{selectedCrypto.network}</span>
           </div>
         </div>
 
