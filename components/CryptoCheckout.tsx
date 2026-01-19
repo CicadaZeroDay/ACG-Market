@@ -106,16 +106,7 @@ export default function CryptoCheckout({
     setError(null);
 
     try {
-      // Зберігаємо TX Hash
-      await supabase
-        .from('crypto_payments')
-        .update({
-          tx_hash_provided: txHash.trim(),
-          status: 'verifying',
-        })
-        .eq('id', paymentId);
-
-      // Викликаємо Edge Function для перевірки
+      // Викликаємо API для перевірки
       const response = await fetch('/api/verify-crypto-payment', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
