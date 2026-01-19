@@ -18,9 +18,12 @@ export function useCart({ language }: UseCartOptions) {
   // Load cart from localStorage on mount (client-side only)
   useEffect(() => {
     const saved = localStorage.getItem(CART_STORAGE_KEY);
+    console.log('[useCart] Loading from localStorage:', saved);
     if (saved) {
       try {
-        setCart(JSON.parse(saved));
+        const parsed = JSON.parse(saved);
+        console.log('[useCart] Parsed cart:', parsed);
+        setCart(parsed);
       } catch (e) {
         console.error('Failed to parse cart from localStorage:', e);
       }

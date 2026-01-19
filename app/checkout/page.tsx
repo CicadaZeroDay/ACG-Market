@@ -17,7 +17,9 @@ function CheckoutContent() {
 
   // Redirect if cart is empty (only after cart is loaded from localStorage)
   useEffect(() => {
+    console.log('[Checkout] isCartLoaded:', isCartLoaded, 'orderId:', orderId, 'cart.length:', cart.length);
     if (isCartLoaded && orderId && cart.length === 0) {
+      console.log('[Checkout] Redirecting - cart is empty');
       router.push('/');
     }
   }, [cart, orderId, router, isCartLoaded]);
