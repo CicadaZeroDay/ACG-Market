@@ -6,6 +6,7 @@ import { supabase } from '@/lib/supabase/client';
 interface CryptoCheckoutProps {
   orderId: string;
   amountUsd: number;
+  productName: string;
   onSuccess?: () => void;
   onCancel?: () => void;
 }
@@ -46,6 +47,7 @@ type Step = 'select' | 'payment' | 'verify' | 'success';
 export default function CryptoCheckout({
   orderId,
   amountUsd,
+  productName,
   onSuccess,
   onCancel,
 }: CryptoCheckoutProps) {
@@ -123,6 +125,7 @@ export default function CryptoCheckout({
         .insert({
           order_id: orderId,
           amount_usd: savedAmount,
+          product_name: productName,
           crypto_currency: crypto.id,
           wallet_address: crypto.address,
           status: 'pending',

@@ -67,6 +67,7 @@ function CheckoutContent() {
         <CryptoCheckout
           orderId={orderId}
           amountUsd={cartTotal}
+          productName={cart.map(item => item.name).join(', ')}
           onSuccess={handleSuccess}
           onCancel={handleCancel}
         />
