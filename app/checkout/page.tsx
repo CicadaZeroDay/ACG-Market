@@ -12,8 +12,9 @@ function CheckoutContent() {
   const [paymentCompleted, setPaymentCompleted] = useState(false);
 
   useEffect(() => {
-    // Generate order ID on mount
-    setOrderId(`order_${Date.now()}_${Math.random().toString(36).substring(7)}`);
+    // Generate order ID on mount (UUID v4 format)
+    const uuid = crypto.randomUUID();
+    setOrderId(uuid);
   }, []);
 
   // Redirect if cart is empty (only after cart is loaded from localStorage, and not after payment)
