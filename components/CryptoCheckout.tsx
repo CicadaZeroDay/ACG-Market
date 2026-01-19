@@ -264,7 +264,7 @@ export default function CryptoCheckout({
             value={txHash}
             onChange={(e) => setTxHash(e.target.value)}
             placeholder="Вставте TX Hash транзакції..."
-            className="w-full p-4 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:outline-none font-mono text-sm"
+            className="w-full p-4 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:outline-none font-mono text-sm text-gray-900 bg-white placeholder-gray-400"
           />
           <p className="mt-2 text-sm text-gray-500">
             TX Hash можна знайти в історії транзакцій вашого гаманця
