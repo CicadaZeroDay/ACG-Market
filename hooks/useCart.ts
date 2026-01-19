@@ -1,16 +1,29 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import { Channel, Product, Package, CartItem } from '@/lib/types';
 import { translations, Language } from '@/lib/translations';
 import { useTelegram } from '@/contexts/TelegramContext';
+
+const CART_STORAGE_KEY = 'acg-market-cart';
 
 interface UseCartOptions {
   language: Language;
 }
 
 export function useCart({ language }: UseCartOptions) {
-  const [cart, setCart] = useState<CartItem[]>([]);
+  const [cart, setCart] = useState<CartItem[]>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem(CART_STORAGE_KEY);
+      return saved ? JSON.parse(saved) : [];
+    }
+    return [];
+  });
   const [isCartOpen, setIsCartOpen] = useState(false);
   const { hapticFeedback } = useTelegram();
+
+  // Persist cart to localStorage
+  useEffect(() => {
+    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
+  }, [cart]);
 
   const t = translations[language];
 

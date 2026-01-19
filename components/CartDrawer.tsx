@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import { X, Trash2, CreditCard, Bitcoin, ShoppingCart, Loader2, AlertCircle } from 'lucide-react';
 import { CartItem } from '@/lib/types';
 import { translations } from '@/lib/translations';
@@ -19,6 +20,7 @@ interface CartDrawerProps {
 }
 
 export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose, items, onRemove, total, t }) => {
+  const router = useRouter();
   const [paymentMethod, setPaymentMethod] = useState<'stripe' | 'crypto'>('stripe');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -48,9 +50,10 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose, items, 
       }
     } else {
       hapticFeedback('medium');
-      alert(`₿ Crypto Payment\nSend ${total} USDT (TRC20) to:\nTHoQdnRed3faebgF8iZE68zwJYkCYh6EB9`);
+      onClose();
+      router.push('/checkout');
     }
-  }, [paymentMethod, items, total, isMiniApp, setMainButtonLoading, hapticFeedback]);
+  }, [paymentMethod, items, total, isMiniApp, setMainButtonLoading, hapticFeedback, router, onClose]);
 
   // Show Telegram MainButton when cart is open with items
   useEffect(() => {
