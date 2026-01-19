@@ -10,20 +10,30 @@ interface UseCartOptions {
 }
 
 export function useCart({ language }: UseCartOptions) {
-  const [cart, setCart] = useState<CartItem[]>(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem(CART_STORAGE_KEY);
-      return saved ? JSON.parse(saved) : [];
-    }
-    return [];
-  });
+  const [cart, setCart] = useState<CartItem[]>([]);
+  const [isCartLoaded, setIsCartLoaded] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const { hapticFeedback } = useTelegram();
 
-  // Persist cart to localStorage
+  // Load cart from localStorage on mount (client-side only)
   useEffect(() => {
-    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
-  }, [cart]);
+    const saved = localStorage.getItem(CART_STORAGE_KEY);
+    if (saved) {
+      try {
+        setCart(JSON.parse(saved));
+      } catch (e) {
+        console.error('Failed to parse cart from localStorage:', e);
+      }
+    }
+    setIsCartLoaded(true);
+  }, []);
+
+  // Persist cart to localStorage (only after initial load)
+  useEffect(() => {
+    if (isCartLoaded) {
+      localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
+    }
+  }, [cart, isCartLoaded]);
 
   const t = translations[language];
 
@@ -108,6 +118,7 @@ export function useCart({ language }: UseCartOptions) {
 
   return {
     cart,
+    isCartLoaded,
     isCartOpen,
     cartTotal,
     cartCount,

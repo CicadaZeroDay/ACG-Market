@@ -8,6 +8,7 @@ import { Language } from '@/lib/translations';
 
 interface CartContextValue {
   cart: CartItem[];
+  isCartLoaded: boolean;
   isCartOpen: boolean;
   cartTotal: number;
   cartCount: number;

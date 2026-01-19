@@ -7,7 +7,7 @@ import { useCartContext } from '@/contexts/CartContext';
 
 function CheckoutContent() {
   const router = useRouter();
-  const { cart, cartTotal, clearCart } = useCartContext();
+  const { cart, cartTotal, clearCart, isCartLoaded } = useCartContext();
   const [orderId, setOrderId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -15,12 +15,12 @@ function CheckoutContent() {
     setOrderId(`order_${Date.now()}_${Math.random().toString(36).substring(7)}`);
   }, []);
 
-  // Redirect if cart is empty (only after orderId is set to avoid race condition)
+  // Redirect if cart is empty (only after cart is loaded from localStorage)
   useEffect(() => {
-    if (orderId && cart.length === 0) {
+    if (isCartLoaded && orderId && cart.length === 0) {
       router.push('/');
     }
-  }, [cart, orderId, router]);
+  }, [cart, orderId, router, isCartLoaded]);
 
   const handleSuccess = () => {
     clearCart();
@@ -31,7 +31,7 @@ function CheckoutContent() {
     router.back();
   };
 
-  if (!orderId) {
+  if (!orderId || !isCartLoaded) {
     return (
       <div className="min-h-screen bg-gray-900 flex items-center justify-center">
         <div className="text-white">Завантаження...</div>
