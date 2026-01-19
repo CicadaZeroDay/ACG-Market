@@ -56,6 +56,7 @@ export default function CryptoCheckout({
   const [error, setError] = useState<string | null>(null);
   const [paymentId, setPaymentId] = useState<string | null>(null);
   const [copied, setCopied] = useState<'address' | 'amount' | null>(null);
+  const [savedAmount] = useState(amountUsd); // Save initial amount
 
   const createPayment = async (crypto: CryptoOption) => {
     setLoading(true);
@@ -66,7 +67,7 @@ export default function CryptoCheckout({
         .from('crypto_payments')
         .insert({
           order_id: orderId,
-          amount_usd: amountUsd,
+          amount_usd: savedAmount,
           crypto_currency: crypto.id,
           wallet_address: crypto.address,
           status: 'pending',
@@ -169,7 +170,7 @@ export default function CryptoCheckout({
 
         <div className="mt-6 p-4 bg-gray-50 rounded-xl flex justify-between items-center">
           <span className="text-gray-600">До оплати:</span>
-          <span className="font-bold text-xl text-gray-900">${amountUsd.toFixed(2)}</span>
+          <span className="font-bold text-xl text-gray-900">${savedAmount.toFixed(2)}</span>
         </div>
 
         {onCancel && (
@@ -201,10 +202,10 @@ export default function CryptoCheckout({
         <div className="mb-4">
           <label className="block text-sm text-gray-500 mb-1">Сума:</label>
           <div
-            onClick={() => copyToClipboard(amountUsd.toString(), 'amount')}
+            onClick={() => copyToClipboard(savedAmount.toString(), 'amount')}
             className="flex items-center justify-between p-4 bg-purple-50 rounded-xl cursor-pointer hover:bg-purple-100"
           >
-            <span className="font-mono text-2xl font-bold text-purple-700">${amountUsd.toFixed(2)}</span>
+            <span className="font-mono text-2xl font-bold text-purple-700">${savedAmount.toFixed(2)}</span>
             <span className="text-sm text-purple-600">
               {copied === 'amount' ? '✓ Скопійовано!' : 'Копіювати'}
             </span>
@@ -265,7 +266,7 @@ export default function CryptoCheckout({
         <div className="mb-6 p-4 bg-gray-50 rounded-xl">
           <div className="flex justify-between mb-2">
             <span className="text-gray-600">Сума:</span>
-            <span className="font-semibold text-gray-900">${amountUsd.toFixed(2)} {selectedCrypto.name}</span>
+            <span className="font-semibold text-gray-900">${savedAmount.toFixed(2)} {selectedCrypto.name}</span>
           </div>
           <div className="flex justify-between">
             <span className="text-gray-600">Мережа:</span>
@@ -303,7 +304,7 @@ export default function CryptoCheckout({
         <h3 className="text-2xl font-semibold text-green-700 mb-2">Оплату підтверджено!</h3>
         <p className="text-gray-600 mb-6">Дякуємо за покупку!</p>
         <div className="p-4 bg-green-50 rounded-xl text-sm text-green-700">
-          Сума: ${amountUsd.toFixed(2)} {selectedCrypto?.name}
+          Сума: ${savedAmount.toFixed(2)} {selectedCrypto?.name}
         </div>
       </div>
     );
