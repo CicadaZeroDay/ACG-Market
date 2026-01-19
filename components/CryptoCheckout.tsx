@@ -369,9 +369,15 @@ export default function CryptoCheckout({
         <div className="text-6xl mb-4">✅</div>
         <h3 className="text-2xl font-semibold text-green-700 mb-2">Оплату підтверджено!</h3>
         <p className="text-gray-600 mb-6">Дякуємо за покупку!</p>
-        <div className="p-4 bg-green-50 rounded-xl text-sm text-green-700">
+        <div className="p-4 bg-green-50 rounded-xl text-sm text-green-700 mb-6">
           Сума: ${savedAmount.toFixed(2)} {selectedCrypto?.name}
         </div>
+        <a
+          href="/"
+          className="block w-full p-4 bg-purple-600 text-white rounded-xl font-semibold hover:bg-purple-700 transition-colors"
+        >
+          Повернутися на сайт
+        </a>
       </div>
     );
   }
