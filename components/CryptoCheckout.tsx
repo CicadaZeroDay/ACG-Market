@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabase/client';
 
 interface CryptoCheckoutProps {
@@ -57,6 +57,61 @@ export default function CryptoCheckout({
   const [paymentId, setPaymentId] = useState<string | null>(null);
   const [copied, setCopied] = useState<'address' | 'amount' | null>(null);
   const [savedAmount] = useState(amountUsd); // Save initial amount
+  const [isPolling, setIsPolling] = useState(false);
+
+  // Check payment status in database
+  const checkPaymentStatus = useCallback(async () => {
+    if (!paymentId || paymentId.startsWith('temp_')) return false;
+
+    try {
+      const { data, error } = await supabase
+        .from('crypto_payments')
+        .select('status')
+        .eq('id', paymentId)
+        .single();
+
+      if (error) {
+        console.warn('Error checking payment status:', error.message);
+        return false;
+      }
+
+      if (data?.status === 'confirmed' || data?.status === 'completed') {
+        return true;
+      }
+    } catch (err) {
+      console.warn('Payment status check failed:', err);
+    }
+    return false;
+  }, [paymentId]);
+
+  // Polling effect - check payment status every 30 seconds when on payment step
+  useEffect(() => {
+    if (step !== 'payment' || !paymentId) return;
+
+    setIsPolling(true);
+
+    // Check immediately on mount
+    checkPaymentStatus().then(confirmed => {
+      if (confirmed) {
+        setStep('success');
+        onSuccess?.();
+      }
+    });
+
+    // Set up polling interval
+    const intervalId = setInterval(async () => {
+      const confirmed = await checkPaymentStatus();
+      if (confirmed) {
+        setStep('success');
+        onSuccess?.();
+      }
+    }, 30000); // 30 seconds
+
+    return () => {
+      clearInterval(intervalId);
+      setIsPolling(false);
+    };
+  }, [step, paymentId, checkPaymentStatus, onSuccess]);
 
   const createPayment = async (crypto: CryptoOption) => {
     setLoading(true);
@@ -224,6 +279,14 @@ export default function CryptoCheckout({
             </div>
           </div>
         </div>
+
+        {/* Waiting for payment indicator */}
+        {isPolling && (
+          <div className="mb-6 p-4 bg-blue-50 rounded-xl flex items-center gap-3">
+            <div className="animate-spin h-5 w-5 border-2 border-blue-500 border-t-transparent rounded-full"></div>
+            <span className="text-blue-700 text-sm">Очікуємо підтвердження оплати...</span>
+          </div>
+        )}
 
         <button
           onClick={() => setStep('verify')}
