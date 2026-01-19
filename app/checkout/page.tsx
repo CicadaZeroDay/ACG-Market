@@ -9,22 +9,23 @@ function CheckoutContent() {
   const router = useRouter();
   const { cart, cartTotal, clearCart, isCartLoaded } = useCartContext();
   const [orderId, setOrderId] = useState<string | null>(null);
+  const [paymentCompleted, setPaymentCompleted] = useState(false);
 
   useEffect(() => {
     // Generate order ID on mount
     setOrderId(`order_${Date.now()}_${Math.random().toString(36).substring(7)}`);
   }, []);
 
-  // Redirect if cart is empty (only after cart is loaded from localStorage)
+  // Redirect if cart is empty (only after cart is loaded from localStorage, and not after payment)
   useEffect(() => {
-    if (isCartLoaded && orderId && cart.length === 0) {
+    if (isCartLoaded && orderId && cart.length === 0 && !paymentCompleted) {
       router.push('/');
     }
-  }, [cart, orderId, router, isCartLoaded]);
+  }, [cart, orderId, router, isCartLoaded, paymentCompleted]);
 
   const handleSuccess = () => {
+    setPaymentCompleted(true);
     clearCart();
-    // Could redirect to a success page or show confirmation
   };
 
   const handleCancel = () => {
@@ -39,7 +40,7 @@ function CheckoutContent() {
     );
   }
 
-  if (cart.length === 0) {
+  if (cart.length === 0 && !paymentCompleted) {
     return (
       <div className="min-h-screen bg-gray-900 flex items-center justify-center">
         <div className="text-white text-center">
