@@ -7,7 +7,13 @@ import {
   Crown,
   Sparkles,
   Check,
-  MessageSquare
+  MessageSquare,
+  Users,
+  BarChart3,
+  Headphones,
+  Gift,
+  Pin,
+  Zap
 } from 'lucide-react';
 import { Package } from '@/lib/types';
 import { translations } from '@/lib/translations';
@@ -30,6 +36,10 @@ const PACKAGE_STYLES = {
     buttonClass: 'bg-zinc-800 text-white hover:bg-acg-yellow hover:text-black',
     checkClass: 'text-acg-yellow/70',
     textClass: 'text-zinc-400',
+    extraFeatures: [
+      { icon: BarChart3, text: 'Базовая аналитика' },
+      { icon: Headphones, text: 'Поддержка в чате' },
+    ],
   },
   1: { // Профи (средний)
     icon: TrendingUp,
@@ -41,6 +51,11 @@ const PACKAGE_STYLES = {
     buttonClass: 'bg-acg-yellow/90 text-black hover:bg-acg-yellow',
     checkClass: 'text-acg-yellow',
     textClass: 'text-zinc-400',
+    extraFeatures: [
+      { icon: BarChart3, text: 'Расширенная аналитика' },
+      { icon: Headphones, text: 'Приоритетная поддержка' },
+      { icon: Zap, text: 'Быстрая модерация' },
+    ],
   },
   2: { // VIP (дорогой)
     icon: Crown,
@@ -52,6 +67,11 @@ const PACKAGE_STYLES = {
     buttonClass: 'bg-acg-yellow text-black font-bold hover:bg-white hover:shadow-[0_0_30px_rgba(255,210,0,0.3)]',
     checkClass: 'text-acg-yellow',
     textClass: 'text-zinc-300',
+    extraFeatures: [
+      { icon: Users, text: 'Персональный менеджер' },
+      { icon: Gift, text: 'Доступ ко всем каналам' },
+      { icon: BarChart3, text: 'Полная аналитика' },
+    ],
   },
 };
 
@@ -105,25 +125,40 @@ export function PackagesSection({ packages, onAddPackage, t }: PackagesSectionPr
               <h3 className={`text-2xl font-black mb-2 ${style.nameClass}`}>{pkg.name}</h3>
               <p className="text-zinc-500 text-sm mb-6 min-h-[40px]">{pkg.description}</p>
 
-              <div className="space-y-3 mb-6">
+              <div className="space-y-2.5 mb-6">
+                {/* Основные характеристики */}
                 <div className={`flex items-center gap-2 text-sm ${style.textClass}`}>
-                  <Check size={14} className={style.checkClass} /> {pkg.posts_count} {t.premiumPackages.posts}
+                  <Check size={14} className={style.checkClass} />
+                  <span><strong>{pkg.posts_count}</strong> {t.premiumPackages.posts}</span>
                 </div>
-                {pkg.includes_pin && (
+                {pkg.includes_pin && pkg.pin_count > 0 && (
                   <div className={`flex items-center gap-2 text-sm ${style.textClass}`}>
-                    <Check size={14} className={style.checkClass} /> {pkg.pin_count} {pkg.pin_count > 1 ? t.premiumPackages.pins : t.premiumPackages.pin}
+                    <Pin size={14} className={style.checkClass} />
+                    <span><strong>{pkg.pin_count}</strong> {pkg.pin_count > 1 ? t.premiumPackages.pins : t.premiumPackages.pin}</span>
                   </div>
                 )}
                 {pkg.bonus_posts > 0 && (
                   <div className={`flex items-center gap-2 text-sm ${style.textClass}`}>
-                    <Check size={14} className={style.checkClass} /> +{pkg.bonus_posts} бонус
+                    <Gift size={14} className={style.checkClass} />
+                    <span><strong>+{pkg.bonus_posts}</strong> бонусных постов</span>
                   </div>
                 )}
                 {pkg.discount_percent > 0 && (
-                  <div className={`flex items-center gap-2 text-sm ${style.textClass}`}>
-                    <Check size={14} className={style.checkClass} /> -{pkg.discount_percent}% скидка
+                  <div className={`flex items-center gap-2 text-sm text-green-400`}>
+                    <Check size={14} className="text-green-400" />
+                    <span><strong>-{pkg.discount_percent}%</strong> скидка</span>
                   </div>
                 )}
+
+                {/* Дополнительные фичи для каждого уровня */}
+                {style.extraFeatures?.map((feature, fIndex) => {
+                  const FeatureIcon = feature.icon;
+                  return (
+                    <div key={fIndex} className={`flex items-center gap-2 text-sm ${style.textClass}`}>
+                      <FeatureIcon size={14} className={style.checkClass} /> {feature.text}
+                    </div>
+                  );
+                })}
               </div>
 
               <div className="mb-6">
