@@ -37,6 +37,7 @@ export interface Package {
   price: number;
   is_popular: boolean;
   discount_percent: number;
+  is_active?: boolean;
 }
 
 export interface CartItem {

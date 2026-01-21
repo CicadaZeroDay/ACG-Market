@@ -12,7 +12,7 @@ import {
   Sparkles,
   Globe
 } from 'lucide-react';
-import { FilterType } from '@/lib/types';
+import { FilterType, Package } from '@/lib/types';
 import { translations, Language } from '@/lib/translations';
 
 interface SidebarProps {
@@ -24,10 +24,14 @@ interface SidebarProps {
   cartCount: number;
   onCartOpen: () => void;
   onPackageClick: (pkgId: string) => void;
+  packages: Package[];
   language: Language;
   onLanguageChange: (lang: Language) => void;
   t: typeof translations.ru;
 }
+
+// Иконки для пакетов по индексу
+const PACKAGE_ICONS = [Rocket, TrendingUp, Crown];
 
 export function Sidebar({
   filter,
@@ -38,6 +42,7 @@ export function Sidebar({
   cartCount,
   onCartOpen,
   onPackageClick,
+  packages,
   language,
   onLanguageChange,
   t
@@ -91,26 +96,17 @@ export function Sidebar({
             {t.sidebar.packages}
           </h3>
           <div className="space-y-1">
-            <PackageButton
-              onClick={() => onPackageClick('gold')}
-              icon={Rocket}
-              label="GOLD"
-              price="$99"
-            />
-            <PackageButton
-              onClick={() => onPackageClick('platinum')}
-              icon={TrendingUp}
-              label="PLATINUM"
-              price="$299"
-              badge="ХИТ"
-            />
-            <PackageButton
-              onClick={() => onPackageClick('exclusive')}
-              icon={Crown}
-              label="EXCLUSIVE"
-              price="$999"
-              highlight
-            />
+            {packages.map((pkg, index) => (
+              <PackageButton
+                key={pkg.id}
+                onClick={() => onPackageClick(pkg.slug || pkg.id)}
+                icon={PACKAGE_ICONS[index] || Rocket}
+                label={pkg.name}
+                price={`$${pkg.price}`}
+                badge={pkg.is_popular ? 'ХИТ' : undefined}
+                highlight={index === packages.length - 1}
+              />
+            ))}
             <a
               href="https://t.me/kyshkovinsta_bot?start=ai_custom"
               target="_blank"

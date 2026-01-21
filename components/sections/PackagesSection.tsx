@@ -12,19 +12,50 @@ import {
 import { Package } from '@/lib/types';
 import { translations } from '@/lib/translations';
 
-// Package UUIDs - должны совпадать с базой данных
-export const PACKAGE_IDS = {
-  gold: '64f43509-ee65-463b-ab9a-84e382f4d421',
-  platinum: 'f5ac9447-e9b0-48cc-8abf-968b4ae30ecc',
-  exclusive: '695c95c4-7a67-478d-bc9b-e69504e087c9'
-} as const;
-
 interface PackagesSectionProps {
+  packages: Package[];
   onAddPackage: (pkg: Package) => void;
   t: typeof translations.ru;
 }
 
-export function PackagesSection({ onAddPackage, t }: PackagesSectionProps) {
+// Иконки и стили для разных уровней пакетов
+const PACKAGE_STYLES = {
+  0: { // Смарт (дешёвый)
+    icon: Rocket,
+    cardClass: 'card-gold',
+    iconClass: 'text-acg-yellow/60',
+    labelClass: 'text-acg-yellow/50',
+    nameClass: 'text-white',
+    priceClass: 'text-white',
+    buttonClass: 'bg-zinc-800 text-white hover:bg-acg-yellow hover:text-black',
+    checkClass: 'text-acg-yellow/70',
+    textClass: 'text-zinc-400',
+  },
+  1: { // Профи (средний)
+    icon: TrendingUp,
+    cardClass: 'card-platinum',
+    iconClass: 'text-acg-yellow/70',
+    labelClass: 'text-acg-yellow/50',
+    nameClass: 'text-white',
+    priceClass: 'text-white',
+    buttonClass: 'bg-acg-yellow/90 text-black hover:bg-acg-yellow',
+    checkClass: 'text-acg-yellow',
+    textClass: 'text-zinc-400',
+  },
+  2: { // VIP (дорогой)
+    icon: Crown,
+    cardClass: 'card-exclusive',
+    iconClass: 'text-acg-yellow',
+    labelClass: 'text-acg-yellow/70',
+    nameClass: 'text-acg-yellow',
+    priceClass: 'text-acg-yellow',
+    buttonClass: 'bg-acg-yellow text-black font-bold hover:bg-white hover:shadow-[0_0_30px_rgba(255,210,0,0.3)]',
+    checkClass: 'text-acg-yellow',
+    textClass: 'text-zinc-300',
+  },
+};
+
+export function PackagesSection({ packages, onAddPackage, t }: PackagesSectionProps) {
   return (
     <div id="packages" className="mb-16">
       <div className="text-center mb-10">
@@ -38,184 +69,78 @@ export function PackagesSection({ onAddPackage, t }: PackagesSectionProps) {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
-        {/* GOLD Card */}
-        <div
-          id="package-gold"
-          className="card-gold rounded-2xl p-6 animate-fade-in-up"
-          style={{ animationDelay: '0.1s' }}
-        >
-          <div className="flex items-center gap-2 mb-4">
-            <Rocket className="text-acg-yellow/60" size={20} />
-            <span className="text-xs font-bold uppercase tracking-wider text-acg-yellow/50">
-              {t.premiumPackages.goldLabel}
-            </span>
-          </div>
-          <h3 className="text-2xl font-black text-white mb-2">GOLD</h3>
-          <p className="text-zinc-500 text-sm mb-6 min-h-[40px]">{t.premiumPackages.goldDesc}</p>
+        {/* Динамические пакеты из БД */}
+        {packages.map((pkg, index) => {
+          const style = PACKAGE_STYLES[index as keyof typeof PACKAGE_STYLES] || PACKAGE_STYLES[0];
+          const Icon = style.icon;
 
-          <div className="space-y-3 mb-6">
-            <div className="flex items-center gap-2 text-sm text-zinc-400">
-              <Check size={14} className="text-acg-yellow/70" /> 5 {t.premiumPackages.posts}
-            </div>
-            <div className="flex items-center gap-2 text-sm text-zinc-400">
-              <Check size={14} className="text-acg-yellow/70" /> 1 {t.premiumPackages.pin}
-            </div>
-            <div className="flex items-center gap-2 text-sm text-zinc-400">
-              <Check size={14} className="text-acg-yellow/70" /> {t.premiumPackages.goldAnalytics}
-            </div>
-          </div>
+          return (
+            <div
+              key={pkg.id}
+              id={`package-${pkg.slug || pkg.id}`}
+              className={`${style.cardClass} rounded-2xl p-6 animate-fade-in-up relative`}
+              style={{ animationDelay: `${0.1 + index * 0.1}s` }}
+            >
+              {/* Бейдж для популярного пакета */}
+              {pkg.is_popular && (
+                <div className="absolute top-4 right-4 bg-acg-yellow/20 text-acg-yellow text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider">
+                  {t.premiumPackages.platinumBadge}
+                </div>
+              )}
 
-          <div className="mb-6">
-            <span className="text-3xl font-black text-white">$99</span>
-          </div>
+              {/* VIP бейдж */}
+              {index === 2 && (
+                <div className="absolute top-4 right-4 bg-acg-yellow text-black text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider flex items-center gap-1">
+                  <Crown size={10} /> {t.premiumPackages.exclusiveBadge}
+                </div>
+              )}
 
-          <button
-            onClick={() =>
-              onAddPackage({
-                id: PACKAGE_IDS.gold,
-                name: 'GOLD',
-                slug: 'gold',
-                category: 'ad',
-                description: t.premiumPackages.goldDesc,
-                price: 99,
-                posts_count: 5,
-                includes_pin: true,
-                pin_count: 1,
-                bonus_posts: 0,
-                discount_percent: 0,
-                is_popular: false
-              })
-            }
-            className="w-full py-3 bg-zinc-800 text-white font-semibold rounded-xl hover:bg-acg-yellow hover:text-black transition-all duration-300"
-          >
-            {t.premiumPackages.goldButton}
-          </button>
-        </div>
+              <div className="flex items-center gap-2 mb-4">
+                <Icon className={style.iconClass} size={20} />
+                <span className={`text-xs font-bold uppercase tracking-wider ${style.labelClass}`}>
+                  {pkg.category === 'ad' ? 'Реклама' : 'Вакансии'}
+                </span>
+              </div>
 
-        {/* PLATINUM Card */}
-        <div
-          id="package-platinum"
-          className="card-platinum rounded-2xl p-6 animate-fade-in-up relative"
-          style={{ animationDelay: '0.2s' }}
-        >
-          <div className="absolute top-4 right-4 bg-acg-yellow/20 text-acg-yellow text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider">
-            {t.premiumPackages.platinumBadge}
-          </div>
-          <div className="flex items-center gap-2 mb-4">
-            <TrendingUp className="text-acg-yellow/70" size={20} />
-            <span className="text-xs font-bold uppercase tracking-wider text-acg-yellow/50">
-              {t.premiumPackages.platinumLabel}
-            </span>
-          </div>
-          <h3 className="text-2xl font-black text-white mb-2">PLATINUM</h3>
-          <p className="text-zinc-500 text-sm mb-6 min-h-[40px]">{t.premiumPackages.platinumDesc}</p>
+              <h3 className={`text-2xl font-black mb-2 ${style.nameClass}`}>{pkg.name}</h3>
+              <p className="text-zinc-500 text-sm mb-6 min-h-[40px]">{pkg.description}</p>
 
-          <div className="space-y-3 mb-6">
-            <div className="flex items-center gap-2 text-sm text-zinc-400">
-              <Check size={14} className="text-acg-yellow" /> 15 {t.premiumPackages.posts}
+              <div className="space-y-3 mb-6">
+                <div className={`flex items-center gap-2 text-sm ${style.textClass}`}>
+                  <Check size={14} className={style.checkClass} /> {pkg.posts_count} {t.premiumPackages.posts}
+                </div>
+                {pkg.includes_pin && (
+                  <div className={`flex items-center gap-2 text-sm ${style.textClass}`}>
+                    <Check size={14} className={style.checkClass} /> {pkg.pin_count} {pkg.pin_count > 1 ? t.premiumPackages.pins : t.premiumPackages.pin}
+                  </div>
+                )}
+                {pkg.bonus_posts > 0 && (
+                  <div className={`flex items-center gap-2 text-sm ${style.textClass}`}>
+                    <Check size={14} className={style.checkClass} /> +{pkg.bonus_posts} бонус
+                  </div>
+                )}
+                {pkg.discount_percent > 0 && (
+                  <div className={`flex items-center gap-2 text-sm ${style.textClass}`}>
+                    <Check size={14} className={style.checkClass} /> -{pkg.discount_percent}% скидка
+                  </div>
+                )}
+              </div>
+
+              <div className="mb-6">
+                <span className={`text-3xl font-black ${style.priceClass}`}>${pkg.price}</span>
+              </div>
+
+              <button
+                onClick={() => onAddPackage(pkg)}
+                className={`w-full py-3 font-semibold rounded-xl transition-all duration-300 ${style.buttonClass}`}
+              >
+                {t.premiumPackages.goldButton}
+              </button>
             </div>
-            <div className="flex items-center gap-2 text-sm text-zinc-400">
-              <Check size={14} className="text-acg-yellow" /> 5 {t.premiumPackages.pins}
-            </div>
-            <div className="flex items-center gap-2 text-sm text-zinc-400">
-              <Check size={14} className="text-acg-yellow" /> {t.premiumPackages.platinumSupport}
-            </div>
-            <div className="flex items-center gap-2 text-sm text-zinc-400">
-              <Check size={14} className="text-acg-yellow" /> {t.premiumPackages.platinumAnalytics}
-            </div>
-          </div>
+          );
+        })}
 
-          <div className="mb-6">
-            <span className="text-3xl font-black text-white">$299</span>
-          </div>
-
-          <button
-            onClick={() =>
-              onAddPackage({
-                id: PACKAGE_IDS.platinum,
-                name: 'PLATINUM',
-                slug: 'platinum',
-                category: 'ad',
-                description: t.premiumPackages.platinumDesc,
-                price: 299,
-                posts_count: 15,
-                includes_pin: true,
-                pin_count: 5,
-                bonus_posts: 0,
-                discount_percent: 0,
-                is_popular: true
-              })
-            }
-            className="w-full py-3 bg-acg-yellow/90 text-black font-semibold rounded-xl hover:bg-acg-yellow transition-all duration-300"
-          >
-            {t.premiumPackages.platinumButton}
-          </button>
-        </div>
-
-        {/* EXCLUSIVE Card */}
-        <div
-          id="package-exclusive"
-          className="card-exclusive rounded-2xl p-6 animate-fade-in-up relative"
-          style={{ animationDelay: '0.3s' }}
-        >
-          <div className="absolute top-4 right-4 bg-acg-yellow text-black text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider flex items-center gap-1">
-            <Crown size={10} /> {t.premiumPackages.exclusiveBadge}
-          </div>
-          <div className="flex items-center gap-2 mb-4">
-            <Crown className="text-acg-yellow" size={20} />
-            <span className="text-xs font-bold uppercase tracking-wider text-acg-yellow/70">
-              {t.premiumPackages.exclusiveLabel}
-            </span>
-          </div>
-          <h3 className="text-2xl font-black text-acg-yellow mb-2">EXCLUSIVE</h3>
-          <p className="text-zinc-500 text-sm mb-6 min-h-[40px]">{t.premiumPackages.exclusiveDesc}</p>
-
-          <div className="space-y-3 mb-6">
-            <div className="flex items-center gap-2 text-sm text-zinc-300">
-              <Check size={14} className="text-acg-yellow" /> 50 {t.premiumPackages.posts}
-            </div>
-            <div className="flex items-center gap-2 text-sm text-zinc-300">
-              <Check size={14} className="text-acg-yellow" /> {t.premiumPackages.unlimitedPins}
-            </div>
-            <div className="flex items-center gap-2 text-sm text-zinc-300">
-              <Check size={14} className="text-acg-yellow" /> {t.premiumPackages.exclusiveManager}
-            </div>
-            <div className="flex items-center gap-2 text-sm text-zinc-300">
-              <Check size={14} className="text-acg-yellow" /> {t.premiumPackages.exclusivePlatforms}
-            </div>
-            <div className="flex items-center gap-2 text-sm text-zinc-300">
-              <Check size={14} className="text-acg-yellow" /> {t.premiumPackages.exclusiveGuarantee}
-            </div>
-          </div>
-
-          <div className="mb-6">
-            <span className="text-3xl font-black text-acg-yellow">$999</span>
-          </div>
-
-          <button
-            onClick={() =>
-              onAddPackage({
-                id: PACKAGE_IDS.exclusive,
-                name: 'EXCLUSIVE',
-                slug: 'exclusive',
-                category: 'ad',
-                description: t.premiumPackages.exclusiveDesc,
-                price: 999,
-                posts_count: 50,
-                includes_pin: true,
-                pin_count: 99,
-                bonus_posts: 0,
-                discount_percent: 0,
-                is_popular: false
-              })
-            }
-            className="w-full py-3 bg-acg-yellow text-black font-bold rounded-xl hover:bg-white transition-all duration-300 hover:shadow-[0_0_30px_rgba(255,210,0,0.3)]"
-          >
-            {t.premiumPackages.exclusiveButton}
-          </button>
-        </div>
-
-        {/* CUSTOM Card */}
+        {/* CUSTOM Card - статическая карточка */}
         <div
           id="package-custom"
           className="card-custom rounded-2xl p-6 animate-fade-in-up relative"

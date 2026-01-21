@@ -47,6 +47,14 @@ export function MarketplacePage({
   const banners = initialBanners;
   const reviews = initialReviews;
 
+  // Filter packages for display (Смарт, Профи, VIP)
+  const displayPackages = useMemo(() => {
+    const targetSlugs = ['ad-smart-250', 'ad-profi-390', 'ad-vip'];
+    return initialPackages
+      .filter(p => targetSlugs.includes(p.slug || '') && p.is_active !== false)
+      .sort((a, b) => a.price - b.price);
+  }, [initialPackages]);
+
   // Banner filtering
   const heroBanners = useMemo(() => banners.filter(b => b.slot === 'hero'), [banners]);
   const midBanner = useMemo(() => banners.find(b => b.slot === 'mid'), [banners]);
@@ -129,6 +137,7 @@ export function MarketplacePage({
         cartCount={cartCount}
         onCartOpen={openCart}
         onPackageClick={scrollToPackage}
+        packages={displayPackages}
         language={language}
         onLanguageChange={setLanguage}
         t={t}
@@ -179,7 +188,7 @@ export function MarketplacePage({
           <StatsBar stats={stats} t={t} />
 
           {/* Premium Packages Section */}
-          <PackagesSection onAddPackage={addPackageToCart} t={t} />
+          <PackagesSection packages={displayPackages} onAddPackage={addPackageToCart} t={t} />
 
           {/* Mid Banner */}
           {midBanner && <MidBanner banner={midBanner} />}
