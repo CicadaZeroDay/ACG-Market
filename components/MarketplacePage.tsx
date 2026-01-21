@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { Channel, Product, Package, Banner, Review } from '@/lib/types';
-import { useCart } from '@/hooks/useCart';
+import { useCartContext } from '@/contexts/CartContext';
 import { useFilters } from '@/hooks/useFilters';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useTelegram } from '@/contexts/TelegramContext';
@@ -73,7 +73,7 @@ export function MarketplacePage({
     stats
   } = useFilters({ channels, products });
 
-  // Cart
+  // Cart (shared context for all pages)
   const {
     cart,
     isCartOpen,
@@ -86,7 +86,7 @@ export function MarketplacePage({
     openCart,
     closeCart,
     setIsCartOpen
-  } = useCart({ language });
+  } = useCartContext();
 
   // Telegram
   const { isMiniApp, showBackButton, hideBackButton, hapticFeedback, isReady } = useTelegram();
