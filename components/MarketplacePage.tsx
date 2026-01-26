@@ -126,7 +126,7 @@ export function MarketplacePage({
   }
 
   return (
-    <div className={`min-h-screen bg-acg-dark text-white flex font-sans selection:bg-acg-yellow selection:text-black ${isMiniApp ? 'mini-app-mode' : ''}`}>
+    <div className={`h-screen max-h-screen overflow-hidden bg-acg-dark text-white flex font-sans selection:bg-acg-yellow selection:text-black ${isMiniApp ? 'mini-app-mode' : ''}`}>
       {/* Sidebar - Desktop */}
       <Sidebar
         filter={filter}
@@ -144,7 +144,7 @@ export function MarketplacePage({
       />
 
       {/* Main Content */}
-      <main className="flex-1 lg:ml-[280px] flex flex-col min-h-screen bg-[#0a0a0a]">
+      <main className="flex-1 lg:ml-[280px] flex flex-col h-screen max-h-screen bg-[#0a0a0a]">
         {/* Sticky Header */}
         <Header
           searchQuery={searchQuery}
